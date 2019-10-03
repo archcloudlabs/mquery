@@ -4,7 +4,7 @@ import argparse
 
 if __name__ == "__main__":
 
-    print("===[> MalQuery <]===")
+    print("===[> MQuery <]===")
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--provider", help="Specify provider \
