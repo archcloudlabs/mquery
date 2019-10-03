@@ -16,11 +16,10 @@ class MalshareAPI():
     def __init__(self, api_key):
         self.api_key = api_key
         self.base_url = "https://malshare.com/api.php?api_key=%s&action="
-        self.get_api_limit = ("getlimit" % (self.api_key))
-        self.hash_search = (self.base_url + "search&query=" % (self.api_key))
-        self.download_endpoint = (self.base_url + "getfile&hash=" % (self.api_key))
-
-        self.get_lists = ("getlist" % (self.api_key))
+        self.get_api_limit = ("getlimit %s" % str(self.api_key))
+        self.hash_search = (self.base_url + "search&query=%s" % (self.api_key))
+        self.download_endpoint = (self.base_url + "getfile&hash=%s" % (self.api_key))
+        self.get_lists = ("getlist%s" % (self.api_key))
 
     def get_limit(self):
         '''
