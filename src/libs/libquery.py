@@ -1,5 +1,6 @@
 try:
     import os
+    import json
     from libs.libmalshare import MalshareAPI
     from libs.libhybridanalysis import HBAPI
 except ImportError as err:
@@ -58,6 +59,20 @@ class MalQuery():
                 self.__provider_objects__.append(self.hba_obj)
                 print("\t[+] Hybrid-Analysis API token identified.")
 
+        elif self.provider == "hba":
+            if self.hba_api_key is not None:
+                self.has_hba_api = True
+                self.hba_obj = HBAPI(self.hba_api_key)
+                self.__provider_objects__.append(self.hba_obj)
+                print("\t[+] Hybrid-Analysis API token identified.")
+
+        elif self.provider == "malshare":
+            if self.malshare_api_key is not None:
+                self.has_malshare_api = True
+                self.malshare_obj = MalshareAPI(self.malshare_api_key)
+                self.__provider_objects__.append(self.malshare_obj)
+                print("\t[+] Malshare API token identified.")
+
 
     def __get_env_var__(self, env_name):
         '''
@@ -83,13 +98,19 @@ class MalQuery():
                 break # No need to download same sample from different provider.
 
         elif action == "search":
+            print("[================ Search ===================]")
             for provider in self.__provider_objects__:
-                self.sample_search(provider, self.hash)
+                provider.hash_search(self.hash)
 
         elif action == "api_info":
-            print("[================API Info===================]")
+            print("[================ API Info ===================]")
             for provider in self.__provider_objects__:
-                self.api_info(provider)
+                provider.get_api_info()
+
+        elif action == "list":
+            print("[================ 24hr File List ===================]")
+            for provider in self.__provider_objects__:
+                provider.latest_submissions()
 
     def sample_download(self, provider, hash_value, file_name):
         '''
@@ -97,19 +118,3 @@ class MalQuery():
         #if provider.lower() == "malshare" and self.has_malshare_api is not None:
         #    self.malshare_obj.download_sample(hash_value, file_name)
         return provider.download_sample(hash_value, file_name) 
-
-    def sample_search(self, provider, hash_value):
-        '''
-        Name: sample_search
-        Purpose: Perform search aganist appropriate API backend depending on 
-        user input.
-        '''
-        print(provider.hash_search(hash_value))
-
-    def api_info(self, provider):
-        '''
-        Name: sample_search
-        Purpose: Perform search aganist appropriate API backend depending on 
-        user input.
-        '''
-        provider.get_api_info()
