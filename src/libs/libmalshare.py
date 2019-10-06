@@ -18,7 +18,7 @@ class MalshareAPI():
         self.base_url = ("https://malshare.com/api.php?api_key=%s&action=" % (self.api_key))
         self.get_api_limit = "getlimit"
         self.hash_search_endpoint = (self.base_url + "search&query=")
-        self.download_endpoint = (self.base_url + "getfile&hash=%s" % (self.api_key))
+        self.download_endpoint = (self.base_url + "getfile&hash=") 
         self.get_lists = "getlist"
         self.get_info_of_sample = "details&hash="
 
@@ -67,6 +67,8 @@ class MalshareAPI():
             try:
                 print(json.dumps(req.json(),indent=4))
             except json.decoder.JSONDecodeError as err:
+                # If something is searched out and doesn't return JSON or 
+                # malformed, print the plain text.
                 print(req.text)
         elif req.status_code == 429:
             return "[!] Error, too many requests being made against Malshare." 
@@ -88,9 +90,6 @@ class MalshareAPI():
             [boolean] True if file downloaded successfully. 
                       False if error occurs.
         '''
-        #download_endpoint = ("/api.php?api_key=%s&action=getfile&hash=%s" 
-        #        % (self.api_key, hash_value))
-
         req = requests.get(self.download_endpoint+hash_value)
 
         if req.status_code == 200:
