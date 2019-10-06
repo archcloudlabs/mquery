@@ -26,14 +26,6 @@ class HBAPI():
                              "api-key" : self.api_key } 
 
         self.base_url = "https://www.hybrid-analysis.com/api/v2/"
-        self.daily_feed = "feed/latest" 
-        self.search_url = "search/hash?_timestamp=%s" % self.get_timestamp()
-        self.api_limit = "key/current?_%s" % self.get_timestamp()
-
-        #self.get_api_limit = ("getlimit" % (self.api_key))
-        #self.hash_search = (self.base_url + "search&query=" % (self.api_key))
-        #self.download_endpoint = (self.base_url + "getfile&hash=" % (self.api_key))
-        #self.get_lists = ("getlist" % (self.api_key))
 
     def get_timestamp(self):
         '''
@@ -50,7 +42,7 @@ class HBAPI():
         parameters: n/a
         '''
 
-        req = requests.get(self.base_url+self.api_limit, headers=self.http_headers)
+        req = requests.get(self.base_url+"key/current", headers=self.http_headers)
         if req.status_code == 200:
             api_headers = json.loads(req.headers.get("Api-Limits"))
             print("\n\t[Hybrid Analysis Requests]\n\t\t[+] Limits: M:%s:H%s\n\t\t" \
@@ -76,7 +68,7 @@ class HBAPI():
                              "accept" : "application/json", # user-agent specified in documentation
                              "User-Agent" : "Falcon Sandbox", 
                              "api-key" : self.api_key } 
-        req = requests.get(self.base_url+self.daily_feed, headers=self.http_headers)
+        req = requests.get(self.base_url+"feed/latest", headers=self.http_headers)
         if req.status_code == 200:
             print(json.dumps(req.json(), indent=5))
         elif req.status_code == 429:
@@ -92,8 +84,10 @@ class HBAPI():
         Parameters: 
             [hash_val] string value to specify hash to search for.
         '''
-        req = requests.get(self.hash_search+hash_val)
-
+        body = "hash=%20"+hash_val
+        req = requests.post(self.base_url+"search/hash", 
+                            headers=self.http_headers,
+                            data=body)
         if req.status_code == 200:
             print(json.dumps(req.json(),indent=4))
         else:
@@ -131,6 +125,3 @@ class HBAPI():
             print("[!] Failed to identify hash %s.\n\t[ERROR] %s" 
                     % (hash_value, req.status_code))
             return False
-if __name__ == "__main__":
-    hb = HBAPI()
-    hb.latest_submissions()
