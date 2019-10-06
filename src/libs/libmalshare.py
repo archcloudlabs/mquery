@@ -19,7 +19,7 @@ class MalshareAPI():
         self.get_api_limit = "getlimit"
         self.hash_search_endpoint = (self.base_url + "search&query=")
         self.download_endpoint = (self.base_url + "getfile&hash=%s" % (self.api_key))
-        self.get_lists = ("getlist%s" % (self.api_key))
+        self.get_lists = "getlist"
 
     def get_api_info(self):
         '''
@@ -29,10 +29,10 @@ class MalshareAPI():
         '''
         req = requests.get(self.base_url+self.get_api_limit)
         if req.status_code == 200:
-            print("\n\t[Malshare API Requests]\n\t\t[+] Limit: %s\n\t\t[+] Remaining:%s " % \
+            return("\n\t[Malshare API Requests]\n\t\t[+] Limit: %s\n\t\t[+] Remaining:%s " % \
                     (req.json().get("LIMIT"), req.json().get("REMAINING")) )
         else:
-            print("\n[!] Error, Malshare API request for API limits went \
+            return("\n[!] Error, Malshare API request for API limits went \
                     horribly wrong. %s" % str(req.text))
 
     def latest_submissions(self):
@@ -41,8 +41,20 @@ class MalshareAPI():
         purpose: get latest hash contents.
         return: JSON content.
         '''
-        req = requests.get(self.url+self.get_lists)
-        return(req.json())
+        req = requests.get(self.base_url+self.get_lists)
+        if req.status_code == 200:
+            #import pdb; pdb.set_trace()
+            for hashes in req.json():
+                print("\n\tMD5: %s\n\tSHA1: %s\n\tSHA256: %s" % \
+                        (hashes.get("md5"),
+                         hashes.get("sha1"),
+                         hashes.get("sha256")))
+            #return(req.json())
+        elif req.status_code == 429:
+            return "[!] Error, too many requests being made against Malshare API"
+        else:
+            return("\n[!] Error, Hyrbrid API request for latest submissions went \
+                    horribly wrong. %s" % str(req.text))
 
     def hash_search(self, hash_val):
         '''
