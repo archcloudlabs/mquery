@@ -3,7 +3,7 @@ from libs.libquery import MalQuery
 import argparse
 
 if __name__ == "__main__":
-    print("[================[>MQuery<==================]")
+    print("[================[ >MQuery< ]==================]")
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--provider", help="Specify provider \
