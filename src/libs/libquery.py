@@ -99,7 +99,4 @@ class MalQuery():
         Purpose: Perform search aganist appropriate API backend depending on 
         user input.
         '''
-#       if provider.lower() == "malshare" and self.has_malshare_api is not None:
-#           self.malshare_obj.search_sample(hash_value)
-        import pdb; pdb.set_trace()
-        provider
+        print(provider.hash_search(hash_value))
