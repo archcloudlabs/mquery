@@ -16,12 +16,12 @@ class MalshareAPI():
     def __init__(self, api_key):
         self.api_key = api_key
         self.base_url = ("https://malshare.com/api.php?api_key=%s&action=" % (self.api_key))
-        self.get_api_limit = ("getlimit %s" % str(self.api_key))
+        self.get_api_limit = "getlimit"
         self.hash_search_endpoint = (self.base_url + "search&query=")
         self.download_endpoint = (self.base_url + "getfile&hash=%s" % (self.api_key))
         self.get_lists = ("getlist%s" % (self.api_key))
 
-    def get_limit(self):
+    def get_api_info(self):
         '''
         Name: get_limit
         purpose: get limit of api
@@ -29,7 +29,8 @@ class MalshareAPI():
         '''
         req = requests.get(self.base_url+self.get_api_limit)
         if req.status_code == 200:
-            print("\nMalshare API Requests %s" % str(json.dumps(req.json(), indent=4)))
+            print("\nMalshare API Requests:\n\tLimit: %s\n\tRemaining:%s " % \
+                    (req.json().get("LIMIT"), req.json().get("REMAINING")) )
         else:
             print("\n[!] Error, Malshare API request for API limits went \
                     horribly wrong. %s" % str(req.text))
