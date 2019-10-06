@@ -12,12 +12,7 @@ except importerror as err:
 class HBAPI():
     '''
     Hybrid-Analysis API wrapper for https://www.hybrid-analysis.com
-
-    curl -X POST "https://www.hybrid-analysis.com/api/v2/search/hash?_timestamp=1570381751779" -H  "accept: application/json" 
-    -H  "user-agent: Falcon Sandbox" -H  "api-key: hn27tpzx8c923858eggtitwz9e2bbedffujt7zg477777a3dlytippc35f229939" 
-        -H  "Content-Type: application/x-www-form-urlencoded" -d "hash=%205f76ee20fb8094332a172b4f57df119637ce74144a939cb67e65cb7f3b04d590%20"
-
-
+    Docs: https://www.hybrid-analysis.com/docs/api/v2
     '''
 
     def __init__(self, api_key):
@@ -31,8 +26,7 @@ class HBAPI():
                              "api-key" : self.api_key } 
 
         self.base_url = "https://www.hybrid-analysis.com/api/v2/"
-        self.daily_feed = "https://www.hybrid-analysis.com/feed?json"
-        #self.search_url = "search/hash?_timestamp=1570381751779"
+        self.daily_feed = "feed/latest" 
         self.search_url = "search/hash?_timestamp=%s" % self.get_timestamp()
         self.api_limit = "key/current?_%s" % self.get_timestamp()
 
@@ -43,6 +37,9 @@ class HBAPI():
 
     def get_timestamp(self):
         '''
+        Name: get_timestamp
+        Purpose: return datetime in format Hybrid-Analysis expects.
+        Return: string value of time.
         '''
         return str(time.time()).replace(".","")
 
@@ -62,8 +59,11 @@ class HBAPI():
                     api_headers.get("used").get("minute"),
                     api_headers.get("used").get("hour")))
 
+        elif req.status_code == 429:
+            return "[!] Error, too many requests being made against Hybrid Analysis." 
+
         else:
-            print("\n[!] Error, Hyrbrid API request for API limits went \
+            return("\n[!] Error, Hyrbrid API request for API limits went \
                     horribly wrong. %s" % str(req.text))
 
     def latest_submissions(self):
@@ -72,10 +72,18 @@ class HBAPI():
         purpose: get latest hash contents.
         return: JSON content.
         '''
-        import pdb; pdb.set_trace()
-        req = requests.get(self.daily_feed)
+        self.http_headers = {
+                             "accept" : "application/json", # user-agent specified in documentation
+                             "User-Agent" : "Falcon Sandbox", 
+                             "api-key" : self.api_key } 
+        req = requests.get(self.base_url+self.daily_feed, headers=self.http_headers)
         if req.status_code == 200:
             return(req.json())
+        elif req.status_code == 429:
+            return "[!] Error, too many requests being made against Hybrid Analysis." 
+        else:
+            return("\n[!] Error, Hyrbrid API request for latest submissions went \
+                    horribly wrong. %s" % str(req.text))
 
     def hash_search(self, hash_val):
         '''
@@ -105,8 +113,6 @@ class HBAPI():
             [boolean] True if file downloaded successfully. 
                       False if error occurs.
         '''
-        #download_endpoint = ("/api.php?api_key=%s&action=getfile&hash=%s" 
-        #        % (self.api_key, hash_value))
 
         req = requests.get(self.download_endpoint+hash_value)
 
