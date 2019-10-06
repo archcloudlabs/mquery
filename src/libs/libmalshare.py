@@ -20,6 +20,7 @@ class MalshareAPI():
         self.hash_search_endpoint = (self.base_url + "search&query=")
         self.download_endpoint = (self.base_url + "getfile&hash=%s" % (self.api_key))
         self.get_lists = "getlist"
+        self.get_info_of_sample = "details&hash="
 
     def get_api_info(self):
         '''
@@ -45,11 +46,9 @@ class MalshareAPI():
         if req.status_code == 200:
             #import pdb; pdb.set_trace()
             for hashes in req.json():
-                print("\n\tMD5: %s\n\tSHA1: %s\n\tSHA256: %s" % \
-                        (hashes.get("md5"),
-                         hashes.get("sha1"),
-                         hashes.get("sha256")))
-            #return(req.json())
+                info_req = requests.get(self.base_url+self.get_info_of_sample+hashes.get("md5"))
+                if info_req.status_code == 200:
+                    print(json.dumps(info_req.json(), indent=5))
         elif req.status_code == 429:
             return "[!] Error, too many requests being made against Malshare API"
         else:
