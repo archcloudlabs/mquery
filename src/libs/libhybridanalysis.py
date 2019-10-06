@@ -2,6 +2,7 @@ import os
 import json
 import argparse
 import sys
+import time
 try:
     import requests
 except importerror as err:
@@ -11,28 +12,58 @@ except importerror as err:
 class HBAPI():
     '''
     Hybrid-Analysis API wrapper for https://www.hybrid-analysis.com
+
+    curl -X POST "https://www.hybrid-analysis.com/api/v2/search/hash?_timestamp=1570381751779" -H  "accept: application/json" 
+    -H  "user-agent: Falcon Sandbox" -H  "api-key: hn27tpzx8c923858eggtitwz9e2bbedffujt7zg477777a3dlytippc35f229939" 
+        -H  "Content-Type: application/x-www-form-urlencoded" -d "hash=%205f76ee20fb8094332a172b4f57df119637ce74144a939cb67e65cb7f3b04d590%20"
+
+
     '''
 
     def __init__(self, api_key):
-        #self.api_key = api_key
+        self.api_key = api_key
+
+        self.http_headers = {
+                             "accept" : "application/json", # user-agent specified in documentation
+                             "User-Agent" : "Falcon Sandbox", 
+                             "Type" : "application/x-www-form-urlencoded",
+                             "Content-Type" : "application/x-www-form-urlencoded",
+                             "api-key" : self.api_key } 
+
+        self.base_url = "https://www.hybrid-analysis.com/api/v2/"
         self.daily_feed = "https://www.hybrid-analysis.com/feed?json"
-        self.base_url = ""
+        #self.search_url = "search/hash?_timestamp=1570381751779"
+        self.search_url = "search/hash?_timestamp=%s" % self.get_timestamp()
+        self.api_limit = "key/current?_%s" % self.get_timestamp()
+
         #self.get_api_limit = ("getlimit" % (self.api_key))
         #self.hash_search = (self.base_url + "search&query=" % (self.api_key))
         #self.download_endpoint = (self.base_url + "getfile&hash=" % (self.api_key))
         #self.get_lists = ("getlist" % (self.api_key))
 
-    def get_limit(self):
+    def get_timestamp(self):
         '''
-        Name: get_limit
+        '''
+        return str(time.time()).replace(".","")
+
+    def get_api_info(self):
+        '''
+        Name: get_api_info
         purpose: get limit of api
         parameters: n/a
         '''
-        req = requests.get(self.base_url+self.get_api_limit)
+
+        req = requests.get(self.base_url+self.api_limit, headers=self.http_headers)
         if req.status_code == 200:
-            print("\nMalshare API Requests %s" % str(json.dumps(req.json(), indent=4)))
+            api_headers = json.loads(req.headers.get("Api-Limits"))
+            print("\n\t[Hybrid Analysis Requests]\n\t\t[+] Limits: M:%s:H%s\n\t\t" \
+                    "[+] Used: M%s:H%s" % (api_headers.get("limits").get("minute"),
+                    api_headers.get("limits").get("hour"),
+                    api_headers.get("used").get("minute"),
+                    api_headers.get("used").get("hour")))
+
         else:
-            print("\n[!] Error, Malshare API request for API limits went \
+            print("\n[!] Error, Hyrbrid API request for API limits went \
                     horribly wrong. %s" % str(req.text))
 
     def latest_submissions(self):
