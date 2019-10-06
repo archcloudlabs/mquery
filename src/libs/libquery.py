@@ -16,10 +16,9 @@ class MalQuery():
     def __init__(self, provider, action, hashval):
         '''
         '''
-        self.provider = provider
-        self.action = action
-        self.hash = hashval
-
+        self.provider = provider # CLI Provided API provider
+        self.action = action # CLI provided action
+        self.hash = hashval # Hash to search
         
         # Malshare groupings
         self.malshare_api_key = self.__get_env_var__("MALSHARE_TOKEN")
@@ -38,7 +37,8 @@ class MalQuery():
         self.__api_status__() # Check what API tokens are available and update 
                               # objects 
 
-        self.parse_action(self.action)
+        self.parse_action(self.action) # Parse CLI action and call underlying 
+                                       # API objects.
 
     def __api_status__(self):
         '''
@@ -46,33 +46,42 @@ class MalQuery():
         Purpose: Check if 
         '''
         if self.provider == "all":
-
-            if self.malshare_api_key is not None:
-                self.has_malshare_api = True
-                self.malshare_obj = MalshareAPI(self.malshare_api_key)
-                self.__provider_objects__.append(self.malshare_obj)
-                print("\t[+] Malshare API token identified.")
-
-            if self.hba_api_key is not None:
-                self.has_hba_api = True
-                self.hba_obj = HBAPI(self.hba_api_key)
-                self.__provider_objects__.append(self.hba_obj)
-                print("\t[+] Hybrid-Analysis API token identified.")
+            self.__load_malshare_api__()
+            self.__load_hba_api__()
 
         elif self.provider == "hba":
-            if self.hba_api_key is not None:
-                self.has_hba_api = True
-                self.hba_obj = HBAPI(self.hba_api_key)
-                self.__provider_objects__.append(self.hba_obj)
-                print("\t[+] Hybrid-Analysis API token identified.")
+            self.__load_hba_api__()
 
         elif self.provider == "malshare":
-            if self.malshare_api_key is not None:
-                self.has_malshare_api = True
-                self.malshare_obj = MalshareAPI(self.malshare_api_key)
-                self.__provider_objects__.append(self.malshare_obj)
-                print("\t[+] Malshare API token identified.")
+            self.__load_malshare_api__()
 
+    def __load_malshare_api__(self):
+        '''
+        Name: __load_malshare_api__
+        Purpose: load Malshare API objects
+        Return: N/A
+        '''
+        if self.malshare_api_key is not None:
+            self.has_malshare_api = True
+            self.malshare_obj = MalshareAPI(self.malshare_api_key)
+            self.__provider_objects__.append(self.malshare_obj)
+            print("\t[+] Malshare API token identified.")
+        else:
+            print("\t[!] Malshare API token not found.")
+
+    def __load_hba_api__(self):
+        '''
+        Name: __load_hba_api__
+        Purpose: load Hybrid-Analysis API objects
+        Return: N/A
+        '''
+        if self.hba_api_key is not None:
+            self.has_hba_api = True
+            self.hba_obj = HBAPI(self.hba_api_key)
+            self.__provider_objects__.append(self.hba_obj)
+            print("\t[+] Hybrid-Analysis API token identified.")
+        else:
+            print("\t[!] Malshare API token not found.")
 
     def __get_env_var__(self, env_name):
         '''
@@ -81,38 +90,44 @@ class MalQuery():
         return: string value.
         '''
         if os.environ.get(env_name) is None:
-            print("[!] %s environment variable not specified." % str(env_name))
+            print("[!] %s environment variable was not specified." % str(env_name))
         else:
             return os.environ.get(env_name)
 
     def parse_action(self, action):
         '''
+        Name: parse_action
+        Purpose: parse CLI action for downloading/searchhing/list
+        Return: integer indicating success or failure.
         '''
         if action == "download":
             for provider in self.__provider_objects__:
-                fname = provider + "_" + self.filename
-                if self.sample_download(provider, self.hash, fname) == True:
+                if self.sample_download(provider, self.hash) == True:
                     print("[+] %s found and downloaded via %s" % (self.hash, fname))
                 else:
                     print("[!] %s not found at %s" % (self.hash, fname))
                 break # No need to download same sample from different provider.
+            return 0
 
         elif action == "search":
             print("[================ Search ===================]")
             for provider in self.__provider_objects__:
                 provider.hash_search(self.hash)
+            return 0
 
         elif action == "api_info":
             print("[================ API Info ===================]")
             for provider in self.__provider_objects__:
                 provider.get_api_info()
+            return 0
 
         elif action == "list":
             print("[================ 24hr File List ===================]")
             for provider in self.__provider_objects__:
                 provider.latest_submissions()
+            return 0
 
-    def sample_download(self, provider, hash_value, file_name):
+    def sample_download(self, provider, hash_value):
         '''
         '''
         #if provider.lower() == "malshare" and self.has_malshare_api is not None:
