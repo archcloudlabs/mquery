@@ -17,4 +17,4 @@ if __name__ == "__main__":
             required=False)
 
     args = parser.parse_args()
-    query = MalQuery(args.provider, args.action, args.action)
+    query = MalQuery(args.provider, args.action, args.hash)
