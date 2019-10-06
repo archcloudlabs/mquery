@@ -64,7 +64,10 @@ class MalshareAPI():
         '''
         req = requests.get(self.hash_search_endpoint+hash_val)
         if req.status_code == 200:
-            print(json.dumps(req.json(),indent=4))
+            try:
+                print(json.dumps(req.json(),indent=4))
+            except json.decoder.JSONDecodeError as err:
+                print(req.text)
         elif req.status_code == 429:
             return "[!] Error, too many requests being made against Malshare." 
         else:
