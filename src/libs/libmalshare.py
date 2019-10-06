@@ -16,11 +16,8 @@ class MalshareAPI():
     def __init__(self, api_key):
         self.api_key = api_key
         self.base_url = ("https://malshare.com/api.php?api_key=%s&action=" % (self.api_key))
-        self.get_api_limit = "getlimit"
         self.hash_search_endpoint = (self.base_url + "search&query=")
         self.download_endpoint = (self.base_url + "getfile&hash=") 
-        self.get_lists = "getlist"
-        self.get_info_of_sample = "details&hash="
 
     def get_api_info(self):
         '''
@@ -28,7 +25,7 @@ class MalshareAPI():
         purpose: get limit of api
         parameters: n/a
         '''
-        req = requests.get(self.base_url+self.get_api_limit)
+        req = requests.get(self.base_url+"getlimit")
         if req.status_code == 200:
             return("\n\t[Malshare API Requests]\n\t\t[+] Limit: %s\n\t\t[+] Remaining:%s " % \
                     (req.json().get("LIMIT"), req.json().get("REMAINING")) )
@@ -42,11 +39,10 @@ class MalshareAPI():
         purpose: get latest hash contents.
         return: JSON content.
         '''
-        req = requests.get(self.base_url+self.get_lists)
+        req = requests.get(self.base_url+"getlist")
         if req.status_code == 200:
-            #import pdb; pdb.set_trace()
             for hashes in req.json():
-                info_req = requests.get(self.base_url+self.get_info_of_sample+hashes.get("md5"))
+                info_req = requests.get(self.base_url+"details&hash="+hashes.get("md5"))
                 if info_req.status_code == 200:
                     print(json.dumps(info_req.json(), indent=5))
         elif req.status_code == 429:
@@ -93,14 +89,12 @@ class MalshareAPI():
         req = requests.get(self.download_endpoint+hash_value)
 
         if req.status_code == 200:
-            if file_name is None:
+            try:
                 with open(hash_value, "wb+") as fout:
                     fout.write(req.content)
                 return True
-            else: # Specified filename on CLI
-                with open(file_name, "wb+") as fout:
-                    fout.write(req.content)
-                return True
+            except IOError as err:
+                print("[!] Error writing to file.")
         else:
             print("[!] Failed to identify hash %s.\n\t[ERROR] %s" 
                     % (hash_value, req.status_code))
