@@ -12,8 +12,8 @@ if __name__ == "__main__":
     parser.add_argument("--hash", help="Specify hash (MD5, SHA128, SHA256)",
             required=False)
 
-    parser.add_argument("--action", help="(download, lookup, api_info)",
-            required=False)
+    parser.add_argument("--action", choices=['download','search','list','info'], 
+            help="(download, lookup, list, info)", required=True)
 
     args = parser.parse_args()
     query = MalQuery(args.provider, args.action, args.hash)
