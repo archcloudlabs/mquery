@@ -17,7 +17,7 @@ class MalshareAPI():
         self.api_key = api_key
         self.base_url = ("https://malshare.com/api.php?api_key=%s&action=" % (self.api_key))
         self.get_api_limit = ("getlimit %s" % str(self.api_key))
-        self.hash_search = (self.base_url + "search&query=%s" % (self.api_key))
+        self.hash_search_endpoint = (self.base_url + "search&query=")
         self.download_endpoint = (self.base_url + "getfile&hash=%s" % (self.api_key))
         self.get_lists = ("getlist%s" % (self.api_key))
 
@@ -50,11 +50,13 @@ class MalshareAPI():
         Parameters: 
             [hash_val] string value to specify hash to search for.
         '''
-        req = requests.get(self.hash_search+hash_val)
-        import pdb; pdb.set_trace()
-
+        req = requests.get(self.hash_search_endpoint+hash_val)
         if req.status_code == 200:
             print(json.dumps(req.json(),indent=4))
+        elif req.status_code == 429:
+            return "[!] Error, too many requests being made against Malshare." 
+        else:
+            return "[!] Error, hash not identified."
     
 
     def download_sample(self, hash_value, file_name=None):
