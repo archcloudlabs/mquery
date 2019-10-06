@@ -78,7 +78,7 @@ class HBAPI():
                              "api-key" : self.api_key } 
         req = requests.get(self.base_url+self.daily_feed, headers=self.http_headers)
         if req.status_code == 200:
-            return(req.json())
+            print(json.dumps(req.json(), indent=5))
         elif req.status_code == 429:
             return "[!] Error, too many requests being made against Hybrid Analysis." 
         else:
