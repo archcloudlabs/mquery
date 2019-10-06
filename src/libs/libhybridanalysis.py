@@ -8,18 +8,19 @@ except importerror as err:
     print("[!] error, missing %s" % (err))
     sys.exit()
 
-class MalshareAPI():
+class HBAPI():
     '''
-    Malshare API wrapper for https://www.malshare.com API
+    Hybrid-Analysis API wrapper for https://www.hybrid-analysis.com
     '''
 
     def __init__(self, api_key):
-        self.api_key = api_key
-        self.base_url = ("https://malshare.com/api.php?api_key=%s&action=" % (self.api_key))
-        self.get_api_limit = ("getlimit %s" % str(self.api_key))
-        self.hash_search = (self.base_url + "search&query=%s" % (self.api_key))
-        self.download_endpoint = (self.base_url + "getfile&hash=%s" % (self.api_key))
-        self.get_lists = ("getlist%s" % (self.api_key))
+        #self.api_key = api_key
+        self.daily_feed = "https://www.hybrid-analysis.com/feed?json"
+        self.base_url = ""
+        #self.get_api_limit = ("getlimit" % (self.api_key))
+        #self.hash_search = (self.base_url + "search&query=" % (self.api_key))
+        #self.download_endpoint = (self.base_url + "getfile&hash=" % (self.api_key))
+        #self.get_lists = ("getlist" % (self.api_key))
 
     def get_limit(self):
         '''
@@ -40,8 +41,10 @@ class MalshareAPI():
         purpose: get latest hash contents.
         return: JSON content.
         '''
-        req = requests.get(self.url+self.get_lists)
-        return(req.json())
+        import pdb; pdb.set_trace()
+        req = requests.get(self.daily_feed)
+        if req.status_code == 200:
+            return(req.json())
 
     def hash_search(self, hash_val):
         '''
@@ -51,11 +54,11 @@ class MalshareAPI():
             [hash_val] string value to specify hash to search for.
         '''
         req = requests.get(self.hash_search+hash_val)
-        import pdb; pdb.set_trace()
 
         if req.status_code == 200:
             print(json.dumps(req.json(),indent=4))
-    
+        else:
+            print("[!] Error attempting grabbing hash!")
 
     def download_sample(self, hash_value, file_name=None):
         '''
@@ -91,3 +94,6 @@ class MalshareAPI():
             print("[!] Failed to identify hash %s.\n\t[ERROR] %s" 
                     % (hash_value, req.status_code))
             return False
+if __name__ == "__main__":
+    hb = HBAPI()
+    hb.latest_submissions()
