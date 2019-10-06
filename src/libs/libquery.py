@@ -50,13 +50,13 @@ class MalQuery():
                 self.has_malshare_api = True
                 self.malshare_obj = MalshareAPI(self.malshare_api_key)
                 self.__provider_objects__.append(self.malshare_obj)
-                print("[+] Malshare API token identified.")
+                print("\t[+] Malshare API token identified.")
 
             if self.hba_api_key is not None:
                 self.has_hba_api = True
                 self.hba_obj = HBAPI(self.hba_api_key)
                 self.__provider_objects__.append(self.hba_obj)
-                print("[+] Hybrid-Analysis API token identified.")
+                print("\t[+] Hybrid-Analysis API token identified.")
 
 
     def __get_env_var__(self, env_name):
@@ -86,6 +86,11 @@ class MalQuery():
             for provider in self.__provider_objects__:
                 self.sample_search(provider, self.hash)
 
+        elif action == "api_info":
+            print("[================API Info===================]")
+            for provider in self.__provider_objects__:
+                self.api_info(provider)
+
     def sample_download(self, provider, hash_value, file_name):
         '''
         '''
@@ -100,3 +105,11 @@ class MalQuery():
         user input.
         '''
         print(provider.hash_search(hash_value))
+
+    def api_info(self, provider):
+        '''
+        Name: sample_search
+        Purpose: Perform search aganist appropriate API backend depending on 
+        user input.
+        '''
+        provider.get_api_info()
