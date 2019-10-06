@@ -102,23 +102,24 @@ class MalQuery():
         '''
         if action == "download":
             for provider in self.__provider_objects__:
-                if self.sample_download(provider, self.hash) == True:
-                    print("[+] %s found and downloaded via %s" % (self.hash, fname))
+                if provider.download_sample(self.hash) == True:
+                    self.sample_download(provider, self.hash)
+                    print("[+] %s found and downloaded via %s" % (self.hash, provider))
+                    break # No need to download same sample from different provider.
                 else:
-                    print("[!] %s not found at %s" % (self.hash, fname))
-                break # No need to download same sample from different provider.
+                    print("[!] %s not found at %s" % (self.hash, provider))
             return 0
 
         elif action == "search":
             print("[================ Search ===================]")
             for provider in self.__provider_objects__:
-                provider.hash_search(self.hash)
+                print(provider.hash_search(self.hash))
             return 0
 
-        elif action == "api_info":
+        elif action == "info":
             print("[================ API Info ===================]")
             for provider in self.__provider_objects__:
-                provider.get_api_info()
+                print(provider.get_api_info())
             return 0
 
         elif action == "list":
@@ -126,10 +127,3 @@ class MalQuery():
             for provider in self.__provider_objects__:
                 provider.latest_submissions()
             return 0
-
-    def sample_download(self, provider, hash_value):
-        '''
-        '''
-        #if provider.lower() == "malshare" and self.has_malshare_api is not None:
-        #    self.malshare_obj.download_sample(hash_value, file_name)
-        return provider.download_sample(hash_value, file_name) 
