@@ -96,13 +96,11 @@ class MalshareAPI():
             if file_name is None:
                 with open(hash_value, "wb+") as fout:
                     fout.write(req.content)
-                print("[+] Successfully downloaded sample %s." % (hash_value))
+                return True
             else: # Specified filename on CLI
                 with open(file_name, "wb+") as fout:
                     fout.write(req.content)
-                print("[+] Successfully downloaded sample %s." % (file_name))
                 return True
-
         else:
             print("[!] Failed to identify hash %s.\n\t[ERROR] %s" 
                     % (hash_value, req.status_code))
