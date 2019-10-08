@@ -89,9 +89,9 @@ class HBAPI():
                             headers=self.http_headers,
                             data=body)
         if req.status_code == 200:
-            print(json.dumps(req.json(),indent=4))
+            return(json.dumps(req.json(),indent=4))
         else:
-            print("[!] Error attempting grabbing hash!")
+            return("[!] Error attempting grabbing hash!")
 
     def download_sample(self, hash_value, file_name=None):
         '''
@@ -115,6 +115,7 @@ class HBAPI():
                 with open(hash_value, "wb+") as fout:
                     fout.write(req.content)
                 print("[+] Successfully downloaded sample %s." % (hash_value))
+                return True
             else: # Specified filename on CLI
                 with open(file_name, "wb+") as fout:
                     fout.write(req.content)
