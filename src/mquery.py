@@ -14,7 +14,7 @@ if __name__ == "__main__":
             required=False)
 
     parser.add_argument("--action", choices=['download','search','list','info'], 
-            help="(download, lookup, list, info)", required=True)
+            help="Specify what you'd like to do: download, lookup, list, info", required=True)
 
     args = parser.parse_args()
     if (args.action == "search" or args.action == "download") and args.hash is None:
