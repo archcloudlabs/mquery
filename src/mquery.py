@@ -18,6 +18,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     if (args.action == "search" or args.action == "download") and args.hash is None:
-        print("\t[!] Search specified with no hash!\n")
+        print("\t[!] Hash not specified!\n")
         sys.exit(1)
+
     query = MalQuery(args.provider, args.action, args.hash)
