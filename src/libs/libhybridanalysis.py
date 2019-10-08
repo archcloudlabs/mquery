@@ -91,7 +91,7 @@ class HBAPI():
         if req.status_code == 200:
             return(json.dumps(req.json(),indent=4))
         else:
-            return("[!] Error attempting grabbing hash!")
+            return("[!] Error attempting grabbing hash from Hybrid-Analysis!")
 
     def download_sample(self, hash_value, file_name=None):
         '''
