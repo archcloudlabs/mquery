@@ -18,12 +18,11 @@ class HBAPI():
     def __init__(self, api_key):
         self.api_key = api_key
 
-        self.http_headers = {
-                             "accept" : "application/json", # user-agent specified in documentation
-                             "User-Agent" : "Falcon Sandbox", 
-                             "Type" : "application/x-www-form-urlencoded",
-                             "Content-Type" : "application/x-www-form-urlencoded",
-                             "api-key" : self.api_key } 
+        self.http_headers = { "accept" : "application/json", 
+            "User-Agent" : "Falcon Sandbox", # user-agent specified in documentation
+            "Type" : "application/x-www-form-urlencoded",
+            "Content-Type" : "application/x-www-form-urlencoded",
+            "api-key" : self.api_key } 
 
         self.base_url = "https://www.hybrid-analysis.com/api/v2/"
 
@@ -37,10 +36,11 @@ class HBAPI():
 
     def get_api_info(self):
         '''
-        Name: get_api_info
-        purpose: get limit of api
-        parameters: n/a
+        Name: get_limit
+        Purpose: get limit of API provider
+        Parameters: N/A
         '''
+ 
 
         req = requests.get(self.base_url+"key/current", headers=self.http_headers)
         if req.status_code == 200:
@@ -61,8 +61,9 @@ class HBAPI():
     def latest_submissions(self):
         '''
         Name: latest_submissions
-        purpose: get latest hash contents.
-        return: JSON content.
+        Purpose: get latest hash contents.
+        Parameters: N/A
+        Return: string.
         '''
         self.http_headers = {
                              "accept" : "application/json", # user-agent specified in documentation
@@ -81,8 +82,8 @@ class HBAPI():
         '''
         Name: search_hash_sample
         purpose: search for infor about a particular hash
-        Parameters: 
-            [hash_val] string value to specify hash to search for.
+        Parameters: [hash_val] string value to specify hash to search for.
+        return: string
         '''
         body = "hash=%20"+hash_val
         req = requests.post(self.base_url+"search/hash", 
@@ -96,18 +97,18 @@ class HBAPI():
     def download_sample(self, hash_value, file_name=None):
         '''
         Name: download_sample
-        Purpose: Download a hash from malware provider and writes sample 
+        Purpose: Download a hash from an API provider and writes sample 
                  byte stream to a file of the hash name or user provided name.
         Param:
             [hash_value] string value indicatin hash (sha{128,256,512}/md5) to 
             search for.
-            [file_name] specify the file name to download on the CLI. Otherwise
-            this is the hash.
+
+            [file_name] string value specifying the file name to download on 
+            the CLI. Otherwise the file name is the hash.
         Return:
             [boolean] True if file downloaded successfully. 
                       False if error occurs.
         '''
-
         req = requests.get(self.download_endpoint+hash_value)
 
         if req.status_code == 200:
