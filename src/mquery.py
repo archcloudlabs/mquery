@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from libs.libquery import MalQuery
+import sys
 import argparse
 
 if __name__ == "__main__":
@@ -16,4 +17,7 @@ if __name__ == "__main__":
             help="(download, lookup, list, info)", required=True)
 
     args = parser.parse_args()
+    if (args.action == "search" or args.action == "download") and args.hash is None:
+        print("\t[!] Search specified with no hash!\n")
+        sys.exit(1)
     query = MalQuery(args.provider, args.action, args.hash)
