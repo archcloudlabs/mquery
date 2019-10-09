@@ -11,7 +11,7 @@ except importerror as err:
 
 class HBAPI():
     '''
-    Hybrid-Analysis API wrapper for https://www.hybrid-analysis.com
+    API wrapper for https://www.hybrid-analysis.com API.
     Docs: https://www.hybrid-analysis.com/docs/api/v2
     '''
 
@@ -26,22 +26,12 @@ class HBAPI():
 
         self.base_url = "https://www.hybrid-analysis.com/api/v2/"
 
-    def get_timestamp(self):
-        '''
-        Name: get_timestamp
-        Purpose: return datetime in format Hybrid-Analysis expects.
-        Return: string value of time.
-        '''
-        return str(time.time()).replace(".","")
-
     def get_api_info(self):
         '''
         Name: get_limit
         Purpose: get limit of API provider
         Parameters: N/A
         '''
- 
-
         req = requests.get(self.base_url+"key/current", headers=self.http_headers)
         if req.status_code == 200:
             api_headers = json.loads(req.headers.get("Api-Limits"))
