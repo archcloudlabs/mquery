@@ -10,12 +10,14 @@ except importerror as err:
 
 class MalshareAPI():
     '''
-    Malshare API wrapper for https://www.malshare.com API
+    API wrapper for https://www.malshare.com API.
+    Docs:
     '''
 
     def __init__(self, api_key):
         self.api_key = api_key
-        self.base_url = ("https://malshare.com/api.php?api_key=%s&action=" % (self.api_key))
+        self.base_url = ("https://malshare.com/api.php?api_key=%s&action=" % \
+                (self.api_key))
         self.hash_search_endpoint = (self.base_url + "details&hash=")
         #self.data_search_endpoint = (self.base_url + "search&query=")
         self.download_endpoint = (self.base_url + "getfile&hash=") 
@@ -28,8 +30,9 @@ class MalshareAPI():
         '''
         req = requests.get(self.base_url+"getlimit")
         if req.status_code == 200:
-            return("\n\t[Malshare API Requests]\n\t\t[+] Limit: %s\n\t\t[+] Remaining:%s " % \
-                    (req.json().get("LIMIT"), req.json().get("REMAINING")) )
+            return("\n\t[Malshare API Requests]\n\t\t[+] Limit: %s\n\t\t[+] \
+                        Remaining:%s " %  (req.json().get("LIMIT"), 
+                        req.json().get("REMAINING")) )
         else:
             return("\n[!] Error, Malshare API request for API limits went \
                     horribly wrong. %s" % str(req.text))
@@ -41,17 +44,21 @@ class MalshareAPI():
         Parameters: N/A
         Return: string.
         '''
-        req = requests.get(self.base_url+"getlist")
+        req = requests.get(self.base_url+"getlist") # Get the latest submissions
         if req.status_code == 200:
             for hashes in req.json():
-                info_req = requests.get(self.base_url+"details&hash="+hashes.get("md5"))
+                    # Get data about the latest submissions
+                info_req = requests.get(self.base_url+"details&hash="+ \
+                        hashes.get("md5"))
                 if info_req.status_code == 200:
                     print(json.dumps(info_req.json(), indent=5))
+                    # TODO: for each hash that comes back concat into a large list
+                    # and return all at once.
         elif req.status_code == 429:
             return "[!] Error, too many requests being made against Malshare API"
         else:
-            return("\n[!] Error, Hyrbrid API request for latest submissions went \
-                    horribly wrong. %s" % str(req.text))
+            return("\n[!] Error, Hyrbrid API request for latest submissions \
+                    went horribly wrong. %s" % str(req.text))
 
     def hash_search(self, hash_val):
         '''
