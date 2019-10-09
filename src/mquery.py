@@ -4,17 +4,17 @@ import sys
 import argparse
 
 if __name__ == "__main__":
-    print("[================[ >MQuery< ]==================]")
+    print("[================[ >MQuery< ]==================]\n")
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--provider", help="Specify provider \
-            malshare, hba)", required=False, default="all")
+    parser.add_argument("--provider", help="Specify provider (malshare, hba, " \
+            "vt, caesar).", required=False, default="all")
 
-    parser.add_argument("--hash", help="Specify hash (MD5, SHA128, SHA256)",
+    parser.add_argument("--hash", help="Specify hash (MD5, SHA128, SHA256).",
             required=False)
 
     parser.add_argument("--action", choices=['download','search','list','info'], 
-            help="Specify what you'd like to do: download, lookup, list, info", required=True)
+            help="specify request type.", required=True)
 
     args = parser.parse_args()
     if (args.action == "search" or args.action == "download") and args.hash is None:
