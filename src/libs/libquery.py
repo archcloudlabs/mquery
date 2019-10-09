@@ -14,23 +14,32 @@ class MalQuery():
     '''
 
     def __init__(self, provider, action, hashval):
-        '''
-        '''
+
         self.provider = provider # CLI Provided API provider
         self.action = action # CLI provided action
         self.hash = hashval # Hash to search
+
+        # TEMPLATE API
+        # self.custom_api_key = self.__get_env_var__("CUSTOM_TOKEN")
+        # self.has_custom_api = None # Boolean object indicating API exists.
+        # self.custom_obj = None
         
         # Malshare groupings
         self.malshare_api_key = self.__get_env_var__("MALSHARE_TOKEN")
-        self.has_malshare_api = None
+        self.has_malshare_api = None # Boolean object indicating API exists.
         self.malshare_obj = None
 
         # Hybrid-Analysis groupings
         self.hba_api_key = self.__get_env_var__("HBA_TOKEN")
-        self.has_hba_api = None
+        self.has_hba_api = None # Boolean object indicating API exists.
         self.hba_obj = None
 
-        # Libquery Meta
+        # VT groupings
+        self.vt_api_key = self.__get_env_var__("VT_TOKEN")
+        self.has_vt_api = None # Boolean object indicating API exists.
+        self.vt_obj = None
+
+        # Libquery Meta 
         self.__provider_objects__ = [] # List of class objects to iterate 
                                        # through for API operations.
 
@@ -54,6 +63,23 @@ class MalQuery():
 
         elif self.provider == "malshare":
             self.__load_malshare_api__()
+
+        elif self.provider == "virustotal":
+            self.__load_vt_api()
+
+    def __load_vt_api__(self):
+        '''
+        Name: __load_vt_api
+        Purpose: load Virus Total API objects
+        Return: N/A
+        '''
+        if self.vt_api_key is not None:
+            self.has_vt_api = True
+            self.vt_obj = VirusTotal(self.vt_api_key)
+            self.__provider_objects__.append(self.malshare_obj)
+            print("\t[+] VirusTotal API token identified.")
+        else:
+            print("\t[!] VirusTotal API token not found.")
 
     def __load_malshare_api__(self):
         '''
@@ -81,7 +107,7 @@ class MalQuery():
             self.__provider_objects__.append(self.hba_obj)
             print("\t[+] Hybrid-Analysis API token identified.")
         else:
-            print("\t[!] Malshare API token not found.")
+            print("\t[!] Hybrid-Analysis API token not found.")
 
     def __get_env_var__(self, env_name):
         '''
@@ -97,24 +123,21 @@ class MalQuery():
     def parse_action(self, action):
         '''
         Name: parse_action
-        Purpose: parse CLI action for downloading/searchhing/list
-        Return: integer indicating success or failure.
+        Purpose: Parse CLI action for downloading/searchhing/list
         '''
         if action == "download":
             for provider in self.__provider_objects__:
                 if provider.download_sample(self.hash) == True:
-                    self.sample_download(provider, self.hash)
-                    print("[+] %s found and downloaded via %s" % (self.hash, provider))
+                    print("[+] %s found and downloaded via %s" % (self.hash,
+                                                                  provider))
                     break # No need to download same sample from different provider.
                 else:
                     print("[!] %s not found at %s" % (self.hash, provider))
-            return 0
 
         elif action == "search":
             print("[================ Search ===================]")
             for provider in self.__provider_objects__:
                 print(provider.hash_search(self.hash))
-            return 0
 
         elif action == "info":
             print("[================ API Info ===================]")
@@ -125,5 +148,4 @@ class MalQuery():
         elif action == "list":
             print("[================ 24hr File List ===================]")
             for provider in self.__provider_objects__:
-                provider.latest_submissions()
-            return 0
+                print(provider.latest_submissions())
