@@ -109,6 +109,6 @@ class MalshareAPI():
             except IOError as err:
                 print("[!] Error writing to file.")
         else:
-            print("[!] Failed to identify hash %s.\n\t[ERROR] %s" 
-                    % (hash_value, req.status_code))
+            print("\t[!] Error %s, failed to identify hash %s." % 
+                    (req.status_code,hash_value ))
             return False
