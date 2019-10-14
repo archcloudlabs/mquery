@@ -21,4 +21,4 @@ if __name__ == "__main__":
         print("\t[!] Hash not specified!\n")
         sys.exit(1)
 
-    query = MalQuery(args.provider, args.action, args.hash)
+    query = MalQuery(args.provider.lower(), args.action, args.hash)
