@@ -36,7 +36,8 @@ class HBAPI():
         if req.status_code == 200:
             api_headers = json.loads(req.headers.get("Api-Limits"))
             return("\n\t[Hybrid Analysis Requests]\n\t\t[+] Limits: M:%s:H%s\n\t\t" \
-                    "[+] Used: M%s:H%s" % (api_headers.get("limits").get("minute"),
+                    "[+] Used: M%s:H%s\n" % 
+                    (api_headers.get("limits").get("minute"),
                     api_headers.get("limits").get("hour"),
                     api_headers.get("used").get("minute"),
                     api_headers.get("used").get("hour")))
@@ -105,10 +106,15 @@ class HBAPI():
 
         if req.status_code == 200:
             if file_name is None:
-                with open(hash_value, "wb+") as fout:
-                    fout.write(req.content)
-                print("\t[+] Successfully downloaded sample %s." % (hash_value))
-                return True
+                try:
+                    with open(hash_value, "wb+") as fout:
+                        fout.write(req.content)
+                    print("\t[+] Successfully downloaded sample %s." % (hash_value))
+                    return True
+                except IOError as err:
+                    print("\t[!] I/O Error downloading sample %s." \
+                            % (hash_value))
+                    return False
             else: # Specified filename on CLI
                 with open(file_name, "wb+") as fout:
                     fout.write(req.content)
