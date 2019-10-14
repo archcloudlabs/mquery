@@ -58,10 +58,33 @@ pip install -r requirements.txt
 ./mquery --action download --hash $HASH_VAL --provider malshare
 ```
 
-* Get API info from virus total API:
+* Get API info from VirusTotal API:
 ```
 ./mquery --action info --provider vt
 ```
+
+* Get API info from all APIs.
+```bash
+./mquery.py --action info
+[================[ >MQuery< ]==================]
+
+[+] Malshare API token identified.
+[+] Hybrid-Analysis API token identified.
+[+] VirusTotal API token identified.
+
+[================[ API Info ]===================]
+
+[Malshare API Requests]
+    [+] Limit: 1000
+    [+] Remaining: 993
+
+[Hybrid Analysis Requests]
+    [+] Limits: M:200:H2000
+    [+] Used: M2:H2
+
+[*] Virustotal does not support an info endpoint at this time.
+```
+
 
 #### Adding Additional Endpoints
 The ``` ./src/libs ```  folder contains classes for each API provider. 
@@ -69,8 +92,8 @@ The ``` ./src/libs ```  folder contains classes for each API provider.
 the underlying provider API calls. 
 
 0. To add a new API, copy one of the existing classes and update the request 
-   endpoints as appropriate.
+endpoints as appropriate.
 1. Copy template groupings from ```libquery.py``` to meet your API.
 2. Create a  "loader function" to populate the variables created in step 1.
 3. Update ```__api_status__(self)``` to execute your loader when a
-   ```libquery``` object is called.
+```libquery``` object is called.
