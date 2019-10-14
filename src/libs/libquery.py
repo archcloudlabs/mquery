@@ -57,6 +57,7 @@ class MalQuery():
         if self.provider == "all":
             self.__load_malshare_api__()
             self.__load_hba_api__()
+            self.__load_vt_api()
 
         elif self.provider == "hba":
             self.__load_hba_api__()
@@ -76,7 +77,7 @@ class MalQuery():
         if self.vt_api_key is not None:
             self.has_vt_api = True
             self.vt_obj = VirusTotal(self.vt_api_key)
-            self.__provider_objects__.append(self.malshare_obj)
+            self.__provider_objects__.append(self.vt_obj)
             print("\t[+] VirusTotal API token identified.")
         else:
             print("\t[!] VirusTotal API token not found.")
@@ -116,7 +117,7 @@ class MalQuery():
         return: string value.
         '''
         if os.environ.get(env_name) is None:
-            print("[!] %s environment variable was not specified." % str(env_name))
+            print("\t[!] %s environment variable was not specified." % str(env_name))
         else:
             return os.environ.get(env_name)
 
@@ -128,24 +129,26 @@ class MalQuery():
         if action == "download":
             for provider in self.__provider_objects__:
                 if provider.download_sample(self.hash) == True:
-                    print("[+] %s found and downloaded via %s" % (self.hash,
-                                                                  provider))
+                    print("\n[================[ Download ]==================]")
+                    print("\t[+] %s found and downloaded via %s" % (self.hash,
+                        provider.__module__.split('.')[1].replace("lib", "")))
+
                     break # No need to download same sample from different provider.
                 else:
                     print("[!] %s not found at %s" % (self.hash, provider))
 
         elif action == "search":
-            print("[================ Search ===================]")
+            print("\n[================[ Search ]===================]")
             for provider in self.__provider_objects__:
                 print(provider.hash_search(self.hash))
 
         elif action == "info":
-            print("[================ API Info ===================]")
+            print("\n[================[ API Info [===================]")
             for provider in self.__provider_objects__:
                 print(provider.get_api_info())
             return 0
 
         elif action == "list":
-            print("[================ 24hr File List ===================]")
+            print("\n[================ 24hr File List ===================]")
             for provider in self.__provider_objects__:
                 print(provider.latest_submissions())
