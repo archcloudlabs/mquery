@@ -3,6 +3,7 @@ try:
     import json
     from libs.libmalshare import MalshareAPI
     from libs.libhybridanalysis import HBAPI
+    from libs.libvirustotal import VTAPI
 except ImportError as err:
     print("[!] Error, could not import %s. Quitting!" % str(err))
     os._exit(1)
@@ -57,7 +58,7 @@ class MalQuery():
         if self.provider == "all":
             self.__load_malshare_api__()
             self.__load_hba_api__()
-            self.__load_vt_api()
+            self.__load_vt_api__()
 
         elif self.provider == "hba":
             self.__load_hba_api__()
@@ -66,7 +67,7 @@ class MalQuery():
             self.__load_malshare_api__()
 
         elif self.provider == "virustotal":
-            self.__load_vt_api()
+            self.__load_vt_api__()
 
     def __load_vt_api__(self):
         '''
@@ -76,7 +77,7 @@ class MalQuery():
         '''
         if self.vt_api_key is not None:
             self.has_vt_api = True
-            self.vt_obj = VirusTotal(self.vt_api_key)
+            self.vt_obj = VTAPI(self.vt_api_key)
             self.__provider_objects__.append(self.vt_obj)
             print("\t[+] VirusTotal API token identified.")
         else:
@@ -135,7 +136,8 @@ class MalQuery():
 
                     break # No need to download same sample from different provider.
                 else:
-                    print("[!] %s not found at %s" % (self.hash, provider))
+                    print("\t[!] Hash %s not found at %s" % (self.hash, 
+                        provider.__module__.split('.')[1].replace("lib", "")))
 
         elif action == "search":
             print("\n[================[ Search ]===================]")
@@ -143,12 +145,12 @@ class MalQuery():
                 print(provider.hash_search(self.hash))
 
         elif action == "info":
-            print("\n[================[ API Info [===================]")
+            print("\n[================[ API Info ]===================]")
             for provider in self.__provider_objects__:
                 print(provider.get_api_info())
             return 0
 
         elif action == "list":
-            print("\n[================ 24hr File List ===================]")
+            print("\n[================[ 24hr File List ]===================]")
             for provider in self.__provider_objects__:
                 print(provider.latest_submissions())
