@@ -99,18 +99,20 @@ class HBAPI():
             [boolean] True if file downloaded successfully. 
                       False if error occurs.
         '''
-        req = requests.get(self.download_endpoint+hash_value)
+
+        req = requests.get(self.base_url + "overview/" + hash_value + \
+                "/sample", headers=self.http_headers)
 
         if req.status_code == 200:
             if file_name is None:
                 with open(hash_value, "wb+") as fout:
                     fout.write(req.content)
-                print("[+] Successfully downloaded sample %s." % (hash_value))
+                print("\t[+] Successfully downloaded sample %s." % (hash_value))
                 return True
             else: # Specified filename on CLI
                 with open(file_name, "wb+") as fout:
                     fout.write(req.content)
-                print("[+] Successfully downloaded sample %s." % (file_name))
+                print("\t[+] Successfully downloaded sample %s." % (file_name))
                 return True
 
         else:
