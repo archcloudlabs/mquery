@@ -30,9 +30,8 @@ class MalshareAPI():
         '''
         req = requests.get(self.base_url+"getlimit")
         if req.status_code == 200:
-            return("\n\t[Malshare API Requests]\n\t\t[+] Limit: %s\n\t\t[+] \
-                        Remaining:%s " %  (req.json().get("LIMIT"), 
-                        req.json().get("REMAINING")) )
+            return("\n\t[Malshare API Requests]\n\t\t[+] Limit: %s \n\t\t[+] Remaining: %s " 
+                    %  (req.json().get("LIMIT"), req.json().get("REMAINING")) )
         else:
             return("\n[!] Error, Malshare API request for API limits went \
                     horribly wrong. %s" % str(req.text))
