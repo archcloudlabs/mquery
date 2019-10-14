@@ -35,7 +35,7 @@ class HBAPI():
         req = requests.get(self.base_url+"key/current", headers=self.http_headers)
         if req.status_code == 200:
             api_headers = json.loads(req.headers.get("Api-Limits"))
-            print("\n\t[Hybrid Analysis Requests]\n\t\t[+] Limits: M:%s:H%s\n\t\t" \
+            return("\n\t[Hybrid Analysis Requests]\n\t\t[+] Limits: M:%s:H%s\n\t\t" \
                     "[+] Used: M%s:H%s" % (api_headers.get("limits").get("minute"),
                     api_headers.get("limits").get("hour"),
                     api_headers.get("used").get("minute"),
