@@ -49,7 +49,7 @@ class CaesarAPI():
         Parameters: N/A
         Return: string.
         '''
-        return "[*] AV Caesar does not support latest submissions."
+        return("\t[*] AV Caesar does not support latest submissions.")
 
     def hash_search(self, hash_val):
         '''
@@ -63,7 +63,7 @@ class CaesarAPI():
 
         if req.status_code == 200:
             try:
-                return(json.dumps(req.json(),indent=4))
+                return("[AV Caesar]\n"+json.dumps(req.json(),indent=4))
             except json.decoder.JSONDecodeError as err:
                 # If something is searched out and doesn't return JSON or 
                 # malformed, print the plain text.
@@ -75,7 +75,7 @@ class CaesarAPI():
         elif req.status_code == 429:
             return "[!] Error, too many requests being made against AV Caesar." 
         else:
-            return "[!] Error, hash not identified."
+            return "[AV Caesar] Hash not found."
     
 
     def download_sample(self, hash_value, file_name=None):
