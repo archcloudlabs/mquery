@@ -90,8 +90,6 @@ class MalQuery():
             self.caesar_obj = CaesarAPI(self.caesar_api_key)
             self.__provider_objects__.append(self.caesar_obj)
             print("\t[+] Caesar API token identified.")
-        else:
-            print("\t[!] Caesar API token not found.")
 
     def __load_vt_api__(self):
         '''
@@ -104,8 +102,6 @@ class MalQuery():
             self.vt_obj = VTAPI(self.vt_api_key)
             self.__provider_objects__.append(self.vt_obj)
             print("\t[+] VirusTotal API token identified.")
-        else:
-            print("\t[!] VirusTotal API token not found.")
 
     def __load_malshare_api__(self):
         '''
@@ -118,8 +114,6 @@ class MalQuery():
             self.malshare_obj = MalshareAPI(self.malshare_api_key)
             self.__provider_objects__.append(self.malshare_obj)
             print("\t[+] Malshare API token identified.")
-        else:
-            print("\t[!] Malshare API token not found.")
 
     def __load_hba_api__(self):
         '''
@@ -132,8 +126,6 @@ class MalQuery():
             self.hba_obj = HBAPI(self.hba_api_key)
             self.__provider_objects__.append(self.hba_obj)
             print("\t[+] Hybrid-Analysis API token identified.")
-        else:
-            print("\t[!] Hybrid-Analysis API token not found.")
 
     def __get_env_var__(self, env_name):
         '''
@@ -151,6 +143,9 @@ class MalQuery():
         Name: parse_action
         Purpose: Parse CLI action for downloading/searchhing/list
         '''
+        if len(self.__provider_objects__) == 0:
+            print("\t[!] No API providers found! Quitting!")
+            return 1
         if action == "download":
             for provider in self.__provider_objects__:
                 if provider.download_sample(self.hash) == True:
