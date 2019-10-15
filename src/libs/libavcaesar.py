@@ -28,7 +28,15 @@ class CaesarAPI():
                 cookies=dict(apikey=self.api_key))
 
         if req.status_code == 200:
-            return(json.dumps(req.json(), indent=5))
+            return("\n\t[ AV Caesar ]\n\t\t[+] Analysis %s/%s" \
+                    "\n\t\t[+] Download: %s/%s\n\t\t[+] Info: %s/%s" %
+                    (req.json().get('analysis').get('current'),
+                     req.json().get('analysis').get('limit'),
+                     req.json().get('download').get('current'),
+                     req.json().get('download').get('limit'),
+                     req.json().get('info').get('current'),
+                     req.json().get('info').get('limit')
+                        ))
 
         else:
             return("\n[!] Error, A/V Caesar API request for API limits went \
