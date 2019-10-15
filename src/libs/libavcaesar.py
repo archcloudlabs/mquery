@@ -4,7 +4,7 @@ import argparse
 import sys
 try:
     import requests
-except importerror as err:
+except ImportError as err:
     print("[!] error, missing %s" % (err))
     sys.exit()
 
