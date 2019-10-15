@@ -30,7 +30,7 @@ class MalshareAPI():
         '''
         req = requests.get(self.base_url+"getlimit")
         if req.status_code == 200:
-            return("\n\t[Malshare API Requests]\n\t\t[+] Limit: %s \n\t\t[+] Remaining: %s " 
+            return("\n[Malshare API Requests]\n\t\t[+] Limit: %s \n\t\t[+] Remaining: %s " 
                     %  (req.json().get("LIMIT"), req.json().get("REMAINING")) )
         else:
             return("\n[!] Error, Malshare API request for API limits went \
@@ -71,7 +71,7 @@ class MalshareAPI():
         req = requests.get(self.hash_search_endpoint+hash_val)
         if req.status_code == 200:
             try:
-                return(json.dumps(req.json(),indent=4))
+                return("[Malshare]\n" + json.dumps(req.json(),indent=4))
             except json.decoder.JSONDecodeError as err:
                 # If something is searched out and doesn't return JSON or 
                 # malformed, print the plain text.
@@ -83,7 +83,7 @@ class MalshareAPI():
         elif req.status_code == 429:
             return "[!] Error, too many requests being made against Malshare." 
         else:
-            return "[Malshare] Hash not identified."
+            return "\t [Malshare] Hash not identified."
     
 
     def download_sample(self, hash_value, file_name=None):
