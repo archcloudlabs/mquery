@@ -81,7 +81,7 @@ class MalshareAPI():
         elif req.status_code == 429:
             return "[!] Error, too many requests being made against Malshare." 
         else:
-            return "[!] Error, hash not identified."
+            return "[Malshare] Error, hash not identified."
     
 
     def download_sample(self, hash_value, file_name=None):
