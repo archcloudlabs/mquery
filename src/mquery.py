@@ -8,7 +8,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--provider", help="Specify provider (malshare, hba, " \
-            "vt, caesar).",choices=['caesar', 'vt', 'malshare', 'hba'],
+            "vt, caesar).",choices=['caesar', 'virustotal', 'malshare', 'hba'],
             required=False, default="all")
 
     parser.add_argument("--hash", help="Specify hash (MD5, SHA128, SHA256).",
