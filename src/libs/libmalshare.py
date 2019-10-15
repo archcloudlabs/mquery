@@ -4,7 +4,7 @@ import argparse
 import sys
 try:
     import requests
-except importerror as err:
+except ImportError as err:
     print("[!] error, missing %s" % (err))
     sys.exit()
 
@@ -33,8 +33,7 @@ class MalshareAPI():
             return("\n[Malshare API Requests]\n\t\t[+] Limit: %s \n\t\t[+] Remaining: %s " 
                     %  (req.json().get("LIMIT"), req.json().get("REMAINING")) )
         else:
-            return("\n[!] Error, Malshare API request for API limits went \
-                    horribly wrong. %s" % str(req.text))
+            return("\n\t[!] Error, Malshare API request for API limits went horribly wrong. %s" % str(req.text))
 
     def latest_submissions(self):
         '''
@@ -58,8 +57,7 @@ class MalshareAPI():
         elif req.status_code == 429:
             return "[!] Error, too many requests being made against Malshare API"
         else:
-            return("\n[Malsahre] Error, trying to get latest submissions. \
-                    Something went horribly wrong. %s" % str(req.text))
+            return("\n\t[Malsahre] Error, trying to get latest submissions. Something went horribly wrong. %s" % str(req.text))
 
     def hash_search(self, hash_val):
         '''
@@ -76,14 +74,13 @@ class MalshareAPI():
                 # If something is searched out and doesn't return JSON or 
                 # malformed, print the plain text.
                 if len(req.text) == 0:
-                    return "[!] Error, HTTP request succeeded, but no content"\
-                            " is available."
+                    return "\t[!] Error, HTTP request succeeded, but no content is available."
                 else:
                     return(req.text)
         elif req.status_code == 429:
             return "[!] Error, too many requests being made against Malshare." 
         else:
-            return "\t [Malshare] Hash not identified."
+            return "\t[Malshare] Hash not identified."
     
 
     def download_sample(self, hash_value, file_name=None):
@@ -109,7 +106,7 @@ class MalshareAPI():
                     fout.write(req.content)
                 return True
             except IOError as err:
-                print("[!] Error writing to file.")
+                print("\t[!] Error writing to file.")
         else:
             print("\t[!] Error %s, failed to identify hash %s." % 
                     (req.status_code,hash_value ))
