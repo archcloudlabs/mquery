@@ -83,7 +83,7 @@ class HBAPI():
         if req.status_code == 200 and len(req.json()) > 0:
             return("[Hybrid-Analysis]\n"+json.dumps(req.json(),indent=4))
         else:
-            return("[Hybrid-Analysis] Hash not found!")
+            return("\t[Hybrid-Analysis] Hash not found!")
 
     def download_sample(self, hash_value, file_name=None):
         '''
