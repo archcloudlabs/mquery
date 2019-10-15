@@ -49,11 +49,13 @@ class VTAPI():
             except IOError as err:
                 return ("[!] Error wrting file, %s" % str(err))
             return "[+] Wrote daily pull to %s" % (fname)
+
         elif req.status_code == 429:
             return "[!] Error, too many requests being made against Virus Total API"
+
         else:
-            return("\n[!] Error, Virus Total API request for latest submissions\
-                    went horribly wrong. %s" % str(req.text))
+            return("\n\t[!] Error, Virus Total API request for latest submissions went horribly wrong. %s" 
+                    % str(req.text))
 
     def hash_search(self, hash_val):
         '''
@@ -69,7 +71,7 @@ class VTAPI():
         req = requests.get(self.base_url+ "report", params=self.params)
         if req.status_code == 200:
             try:
-                return(json.dumps(req.json(),indent=4))
+                return("[VirusTotal]\n" + json.dumps(req.json(),indent=4))
             except json.decoder.JSONDecodeError as err:
                 if len(req.text) == 0:
                     return "[!] Error, HTTP request succeeded, but no content"\
@@ -77,9 +79,9 @@ class VTAPI():
                 else:
                     return(req.text)
         elif req.status_code == 429:
-            return "[!] Error, too many requests being made against Malshare." 
+            return "[!] Error, too many requests being made against VirusTotal." 
         else:
-            return "[VirusTotal] Error, hash not identified."
+            return "[VirusTotal] Error, hash not found."
     
 
     def download_sample(self, hash_value, file_name=None):
@@ -107,13 +109,13 @@ class VTAPI():
                     fout.write(req.content)
                 return True
             except IOError as err:
-                print("[!] Error writing to file.\n\tMsg: %s" % (err))
+                print("\t[!] Error writing to file.\n\tMsg: %s" % (err))
                 return False
         elif req.status_code == 403:
             print("\t[!] Forbidden, you do not have enough privileges to make "\
             "this request. This is likely due to the lack of a private API key.")
             return False
         else:
-            print("[!] Failed to identify hash %s.\n\t[ERROR] %s" 
+            print("\t[!] Failed to identify hash %s.\n\t[ERROR] %s" 
                     % (hash_value, req.status_code))
             return False
