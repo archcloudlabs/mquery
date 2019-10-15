@@ -5,7 +5,7 @@ import sys
 import time
 try:
     import requests
-except importerror as err:
+except ImportError as err:
     print("[!] error, missing %s" % (err))
     sys.exit()
 
@@ -35,19 +35,17 @@ class HBAPI():
         req = requests.get(self.base_url+"key/current", headers=self.http_headers)
         if req.status_code == 200:
             api_headers = json.loads(req.headers.get("Api-Limits"))
-            return("\n\t[Hybrid Analysis Requests]\n\t\t[+] Limits: M:%s:H%s\n\t\t" \
-                    "[+] Used: M%s:H%s\n" % 
+            return("\n\t[Hybrid Analysis Requests]\n\t\t[+] Limits: M:%s:H%s\n\t\t[+] Used: M%s:H%s\n" % 
                     (api_headers.get("limits").get("minute"),
                     api_headers.get("limits").get("hour"),
                     api_headers.get("used").get("minute"),
                     api_headers.get("used").get("hour")))
 
         elif req.status_code == 429:
-            return "[!] Error, too many requests being made against Hybrid Analysis." 
+            return "\n\t[!] Error, too many requests being made against Hybrid Analysis." 
 
         else:
-            return("\n[!] Error, Hyrbrid API request for API limits went \
-                    horribly wrong. %s" % str(req.text))
+            return("\n\t[!] Error, Hyrbrid API request for API limits went horribly wrong. %s\n" % str(req.text))
 
     def latest_submissions(self):
         '''
@@ -64,10 +62,9 @@ class HBAPI():
         if req.status_code == 200:
             return("\t[Hybrid Analysis]\n" + json.dumps(req.json(), indent=4))
         elif req.status_code == 429:
-            return "[!] Error, too many requests being made against Hybrid Analysis." 
+            return "\n\t[!] Error, too many requests being made against Hybrid Analysis." 
         else:
-            return("\n[!] Error, Hyrbrid API request for latest submissions went \
-                    horribly wrong. %s" % str(req.text))
+            return("\n\t[!] Error, Hyrbrid API request for latest submissions went horribly wrong. %s" % str(req.text))
 
     def hash_search(self, hash_val):
         '''
@@ -122,6 +119,6 @@ class HBAPI():
                 return True
 
         else:
-            print("[!] Failed to identify hash %s.\n\t[ERROR] %s" 
+            print("\t[!] Failed to identify hash %s.\n\t[ERROR] %s" 
                     % (hash_value, req.status_code))
             return False
