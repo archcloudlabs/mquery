@@ -44,20 +44,22 @@ class MalshareAPI():
         Return: string.
         '''
         req = requests.get(self.base_url+"getlist") # Get the latest submissions
+        json_data = {}
         if req.status_code == 200:
             for hashes in req.json():
                     # Get data about the latest submissions
                 info_req = requests.get(self.base_url+"details&hash="+ \
                         hashes.get("md5"))
                 if info_req.status_code == 200:
-                    print(json.dumps(info_req.json(), indent=5))
-                    # TODO: for each hash that comes back concat into a large list
-                    # and return all at once.
+                    print(json.dumps(info_req.json(), indent=4))
+                    # TODO: for each hash that comes back concat into a large 
+                    # list and return all at once.
+            return True # Avoid 'None' from being printed.
         elif req.status_code == 429:
             return "[!] Error, too many requests being made against Malshare API"
         else:
-            return("\n[!] Error, Hyrbrid API request for latest submissions \
-                    went horribly wrong. %s" % str(req.text))
+            return("\n[Malsahre] Error, trying to get latest submissions. \
+                    Something went horribly wrong. %s" % str(req.text))
 
     def hash_search(self, hash_val):
         '''
@@ -81,7 +83,7 @@ class MalshareAPI():
         elif req.status_code == 429:
             return "[!] Error, too many requests being made against Malshare." 
         else:
-            return "[Malshare] Error, hash not identified."
+            return "[Malshare] Hash not identified."
     
 
     def download_sample(self, hash_value, file_name=None):
