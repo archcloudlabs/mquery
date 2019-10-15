@@ -62,7 +62,7 @@ class HBAPI():
                              "api-key" : self.api_key } 
         req = requests.get(self.base_url+"feed/latest", headers=self.http_headers)
         if req.status_code == 200:
-            print(json.dumps(req.json(), indent=5))
+            return("\t[Hybrid Analysis]\n" + json.dumps(req.json(), indent=4))
         elif req.status_code == 429:
             return "[!] Error, too many requests being made against Hybrid Analysis." 
         else:
@@ -80,10 +80,10 @@ class HBAPI():
         req = requests.post(self.base_url+"search/hash", 
                             headers=self.http_headers,
                             data=body)
-        if req.status_code == 200:
-            return(json.dumps(req.json(),indent=4))
+        if req.status_code == 200 and len(req.json()) > 0:
+            return("[Hybrid-Analysis]\n"+json.dumps(req.json(),indent=4))
         else:
-            return("[!] Error attempting grabbing hash from Hybrid-Analysis!")
+            return("[Hybrid-Analysis] Hash not found!")
 
     def download_sample(self, hash_value, file_name=None):
         '''
