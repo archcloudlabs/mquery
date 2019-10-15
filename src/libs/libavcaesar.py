@@ -63,7 +63,7 @@ class CaesarAPI():
 
         if req.status_code == 200:
             try:
-                return("[AV Caesar]\n"+json.dumps(req.json(),indent=4))
+                return("\t[AV Caesar]\n"+json.dumps(req.json(),indent=4))
             except json.decoder.JSONDecodeError as err:
                 # If something is searched out and doesn't return JSON or 
                 # malformed, print the plain text.
