@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from libs.libquery import MalQuery
+from providers.libquery import MalQuery
 import sys
 import argparse
 
