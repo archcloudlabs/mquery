@@ -1,7 +1,13 @@
 # MQuery
 Multi-API Malware Search &amp; Download Utility.
 
-### About
+<html>
+    <center>
+    ![MQuery Image](https://imgur.com/SGnNoju)
+    </center>
+</html>
+
+### About The Project
 This utility wraps [Malshare](https://www.malshare.com), [Hybrid
 Analysis'](https://www.hybrid-analysis.com) and 
 [Virus Total](https://www.virustotal.com) public APIs to enable researchers to 
@@ -28,6 +34,7 @@ you have a premium API- key(I.E: downloading samples from VT)**.
 * List API info.
 
 ### Installation
+
 #### System Configuration
 API keys must be exported as environment variables or availble via your .bashrc.
 The following variable names are parsed by ```libquery.py``` for provider access:
@@ -84,7 +91,6 @@ pip install -r requirements.txt
 
 [*] Virustotal does not support an info endpoint at this time.
 ```
-
 
 #### Adding Additional Endpoints
 The ``` ./src/libs ```  folder contains classes for each API provider. 
