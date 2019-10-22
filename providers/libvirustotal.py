@@ -81,7 +81,7 @@ class VTAPI():
         elif req.status_code == 429:
             return "[!] Error, too many requests being made against VirusTotal." 
         else:
-            return "[VirusTotal] Error, hash not found."
+            return "\t[VirusTotal] Error, hash not found."
     
 
     def download_sample(self, hash_value, file_name=None):

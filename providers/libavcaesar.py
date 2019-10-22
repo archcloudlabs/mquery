@@ -73,9 +73,9 @@ class CaesarAPI():
                 else:
                     return(req.text)
         elif req.status_code == 429:
-            return "[!] Error, too many requests being made against AV Caesar." 
+            return "\t[!] Error, too many requests being made against AV Caesar." 
         else:
-            return "[AV Caesar] Hash not found."
+            return "\t[AV Caesar] Hash not found."
     
 
     def download_sample(self, hash_value, file_name=None):
@@ -102,8 +102,8 @@ class CaesarAPI():
                     fout.write(req.content)
                 return True
             except IOError as err:
-                print("[!] Error writing to file.")
+                print("\t[!] Error writing to file.")
         else:
-            print("[!] Failed to identify hash %s.\n\t[ERROR] %s" 
+            print("\t[!] Failed to identify hash %s.\n\t[ERROR] %s" 
                     % (hash_value, req.status_code))
             return False
