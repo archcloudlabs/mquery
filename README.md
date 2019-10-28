@@ -44,6 +44,14 @@ The following variable names are parsed by ```libquery.py``` for provider access
 * Virus Total (vt): ```VT_TOKEN```
 * Hybrid-Analysis (hba): ```HBA_TOKEN```
 
+Here's an ```.zshrc``` example:
+```
+export MALSHARE_TOKEN="TOKEN_GOES_HERE"  
+export VT_TOKEN="TOKEN_GOES_HERE"
+export CAESAR_TOKEN="TOKEN_GOES_HERE"
+export HBA_TOKEN="TOKEN_GOES_HERE"
+```
+
 ### Dependencies
 * Python requests
 ```
