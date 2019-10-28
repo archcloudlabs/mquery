@@ -1,6 +1,5 @@
 try:
     import os
-    import json
     from providers.libmalshare import MalshareAPI
     from providers.libhybridanalysis import HBAPI
     from providers.libvirustotal import VTAPI
@@ -25,7 +24,7 @@ class MalQuery():
         # self.custom_api_key = self.__get_env_var__("CUSTOM_TOKEN")
         # self.has_custom_api = None # Boolean object indicating API exists.
         # self.custom_obj = None
-        
+
         # Malshare groupings
         self.malshare_api_key = self.__get_env_var__("MALSHARE_TOKEN")
         self.has_malshare_api = None # Boolean object indicating API exists.
@@ -46,20 +45,20 @@ class MalQuery():
         self.has_caesar_api = None # Boolean object indicating API exists.
         self.caesar_obj = None
 
-        # Libquery Meta 
-        self.__provider_objects__ = [] # List of class objects to iterate 
+        # Libquery Meta
+        self.__provider_objects__ = [] # List of class objects to iterate
                                        # through for API operations.
 
-        self.__api_status__() # Check what API tokens are available and update 
-                              # objects 
+        self.__api_status__() # Check what API tokens are available and update
+                              # objects
 
-        self.parse_action(self.action) # Parse CLI action and call underlying 
+        self.parse_action(self.action) # Parse CLI action and call underlying
                                        # API objects.
 
     def __api_status__(self):
         '''
         Name: __api_status__
-        Purpose: Check if 
+        Purpose: Check if API keys exist.
         '''
         if self.provider == "all":
             self.__load_malshare_api__()
@@ -151,12 +150,12 @@ class MalQuery():
                 if provider.download_sample(self.hash) == True:
                     print("\n[================[ Download ]==================]")
                     print("\t[+] %s found and downloaded via %s" % (self.hash,
-                        provider.__module__.split('.')[1].replace("lib", "")))
+                            provider.__module__.split('.')[1].replace("lib", "")))
 
-                    break # No need to download same sample from different provider.
+                    return 0# No need to download same sample from different provider.
                 else:
-                    print("\t[!] Hash %s not found at %s" % (self.hash, 
-                        provider.__module__.split('.')[1].replace("lib", "")))
+                    print("\t[!] Hash %s not found at %s" % (self.hash,
+                            provider.__module__.split('.')[1].replace("lib", "")))
 
         elif action == "search":
             print("\n[================[ Search ]===================]")
