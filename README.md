@@ -6,9 +6,9 @@
 
 ## About The Project
 This utility wraps [Malshare](https://www.malshare.com), [Hybrid
-Analysis'](https://www.hybrid-analysis.com) and 
-[Virus Total](https://www.virustotal.com) public APIs to enable researchers to 
-query for information about malware samples.  
+Analysis'](https://www.hybrid-analysis.com), [Virus Total](https://www.virustotal.com),
+and [AV Caesar](https://avcaesar.malware.lu/) public APIs to enable researchers 
+to query for information about malware samples.  
 
 **You must have an API key(s) to use this utility. Some features only work if
 you have a premium API- key(I.E: downloading samples from VT)**. 
@@ -20,15 +20,19 @@ you have a premium API- key(I.E: downloading samples from VT)**.
 * List API info.
 
 ## Getting API Keys
-* [Malshare Registration]()
-    * Free 1k API calls a day.
+* [Malshare Registration](https://malshare.com/register.php)
+    * Free API calls for searching, and downloading samples. 
 
-* [Hybrid Analysis Registration]()
-    * Free API calls, but must be vetted for premium access for API sample 
-      downloads.
-* [VirusTotal Registration]()
+* [Hybrid Analysis Registration](https://www.hybrid-analysis.com/signup)
+    * Free API calls for searching, and downloading public samples, network
+      captures, etc...
+
+* [VirusTotal Registration](https://www.virustotal.com/gui/join-us)
     * Free API calls for searching and listing files. Premium access required
       for downloads. Free accounts are heavily throttled (4 requests a second)
+
+* [AV Caesar](https://avcaesar.malware.lu/account/signup)
+    * Free API calls for searching and downloading.
 
 ## Installation
 
