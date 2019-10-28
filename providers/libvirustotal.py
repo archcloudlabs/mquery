@@ -1,10 +1,9 @@
-import os
 import json
-import argparse
+import time
 import sys
 try:
     import requests
-except importerror as err:
+except ImportError as err:
     print("[!] error, missing %s" % (err))
     sys.exit()
 
@@ -18,7 +17,7 @@ class VTAPI():
     def __init__(self, api_key):
         self.api_key = api_key
         self.base_url = ("https://www.virustotal.com/vtapi/v2/file/")
-        self.params = { 'apikey' : self.api_key }
+        self.params = {'apikey' : self.api_key}
 
     def get_api_info(self):
         '''
@@ -37,25 +36,25 @@ class VTAPI():
         '''
         print("\t[*] This is a premium feature, and requires a private API key.")
         self.params['package'] = "11:00"
-        req = requests.get(self.base_url+"feed", params=self.params,
-                stream=True, allow_redirects=True)
+        req = requests.get(self.base_url+"feed", params=self.params, stream=True,
+                           allow_redirects=True)
 
         if req.status_code == 200:
-            fname = time.asctime().replace(' ', '-').replace(':','-')
+            fname = time.asctime().replace(' ', '-').replace(':', '-')
             try:
-                with open(fname, 'wb') as fd:
+                with open(fname, 'wb') as file_writer:
                     for chunk in req.iter_content(chunk_size=65536):
-                        fw.write(chunk)
+                        file_writer.write(chunk)
             except IOError as err:
-                return ("[!] Error wrting file, %s" % str(err))
+                return "[!] Error wrting file, %s" % str(err)
             return "[+] Wrote daily pull to %s" % (fname)
 
         elif req.status_code == 429:
             return "[!] Error, too many requests being made against Virus Total API"
 
-        else:
-            return("\n\t[!] Error, Virus Total API request for latest submissions went horribly wrong. %s" 
-                    % str(req.text))
+        elif req.status_code == 403:
+            return "\n\t[!] Error, you do not have appropriate permissions " \
+                    "to make this Virus Total API request."
 
     def hash_search(self, hash_val):
         '''
@@ -71,32 +70,35 @@ class VTAPI():
         req = requests.get(self.base_url+ "report", params=self.params)
         if req.status_code == 200:
             try:
-                return("[VirusTotal]\n" + json.dumps(req.json(),indent=4))
-            except json.decoder.JSONDecodeError as err:
+                return "[VirusTotal]\n" + json.dumps(req.json(), indent=4)
+            except json.decoder.JSONDecodeError:
                 if len(req.text) == 0:
-                    return "[!] Error, HTTP request succeeded, but no content"\
+                    return "[!] Error, HTTP request succeeded, but no content" \
                             " is available."
                 else:
-                    return(req.text)
+                    return req.text
         elif req.status_code == 429:
-            return "[!] Error, too many requests being made against VirusTotal." 
+            return "\t[!] Error, too many requests being made against VirusTotal."
+
+        elif req.status_code == 403:
+            return "\n\t[!] Error, you do not have appropriate permissions " \
+                    "to make this Virus Total API request."
         else:
             return "\t[VirusTotal] Error, hash not found."
-    
 
-    def download_sample(self, hash_value, file_name=None):
+    def download_sample(self, hash_value):
         '''
         Name: download_sample
-        Purpose: Download a hash from an API provider and writes sample 
+        Purpose: Download a hash from an API provider and writes sample
                  byte stream to a file of the hash name or user provided name.
         Param:
-            [hash_value] string value indicatin hash (sha{128,256,512}/md5) to 
+            [hash_value] string value indicatin hash (sha{128,256,512}/md5) to
             search for.
 
-            [file_name] string value specifying the file name to download on 
+            [file_name] string value specifying the file name to download on
             the CLI. Otherwise the file name is the hash.
         Return:
-            [boolean] True if file downloaded successfully. 
+            [boolean] True if file downloaded successfully.
                       False if error occurs.
         '''
         print("\t[*] This is a premium feature, and requires a private API key.")
@@ -112,10 +114,10 @@ class VTAPI():
                 print("\t[!] Error writing to file.\n\tMsg: %s" % (err))
                 return False
         elif req.status_code == 403:
-            print("\t[!] Forbidden, you do not have enough privileges to make "\
-            "this request. This is likely due to the lack of a private API key.")
+            print("\n\t[!] Error, you do not have appropriate permissions " \
+                    "to make this Virus Total API request.")
             return False
         else:
-            print("\t[!] Failed to identify hash %s.\n\t[ERROR] %s" 
+            print("\t[!] Failed to identify hash %s.\n\t[ERROR] %s" \
                     % (hash_value, req.status_code))
             return False
