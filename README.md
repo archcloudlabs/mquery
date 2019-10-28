@@ -11,7 +11,7 @@ and [AV Caesar](https://avcaesar.malware.lu/) public APIs to enable researchers
 to query for information about malware samples.  
 
 **You must have an API key(s) to use this utility. Some features only work if
-you have a premium API- key(I.E: downloading samples from VT)**. 
+you have a premium API- key (I.E: downloading samples from VT)**. 
 
 ### Supported functionality
 * Searching hashes.
@@ -54,7 +54,7 @@ pip install -r requirements.txt
 0. Specify API keys within environment variables. For example: ``` export MALSHARE_TOKEN="TOKEN_GOES_HERE" ```
 
 1. ``` docker build . -t mquery```
-2. ``` docker run mquery --action info```
+
 
 ## Example Queries
 
@@ -94,6 +94,14 @@ pip install -r requirements.txt
 
 [*] Virustotal does not support an info endpoint at this time.
 ```
+
+#### Example Docker Queries
+* Search for hash across all providers
+```
+docker run mquery --action search --hash 5a34cb996293fde2cb7a4ac89587393a
+```
+
+* Download a sample
 
 ## Adding Additional Endpoints
 The ``` ./src/libs ```  folder contains classes for each API provider. 
