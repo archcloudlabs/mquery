@@ -132,7 +132,7 @@ class MalQuery():
         purpose: get environment variable for malshare api key.
         return: string value.
         '''
-        if os.environ.get(env_name) is None:
+        if os.environ.get(env_name) is None or len(os.environ.get(env_name)) == 0:
             print("\t[!] %s environment variable was not specified." % str(env_name))
         else:
             return os.environ.get(env_name)
