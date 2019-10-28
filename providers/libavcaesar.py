@@ -1,6 +1,4 @@
-import os
 import json
-import argparse
 import sys
 try:
     import requests
@@ -10,7 +8,7 @@ except ImportError as err:
 
 class CaesarAPI():
     '''
-    API wrapper for 
+    API wrapper for AV Caesar
     Docs: https://avcaesar.malware.lu/docs/api
     '''
 
@@ -24,23 +22,20 @@ class CaesarAPI():
         Purpose: get limit of API provider
         Parameters: N/A
         '''
-        req = requests.get(self.base_url+"/user/quota", 
-                cookies=dict(apikey=self.api_key))
+        req = requests.get(self.base_url+"/user/quota", cookies=dict(apikey=self.api_key))
 
         if req.status_code == 200:
             return("\n\t[ AV Caesar ]\n\t\t[+] Analysis %s/%s" \
-                    "\n\t\t[+] Download: %s/%s\n\t\t[+] Info: %s/%s" %
-                    (req.json().get('analysis').get('current'),
-                     req.json().get('analysis').get('limit'),
-                     req.json().get('download').get('current'),
-                     req.json().get('download').get('limit'),
-                     req.json().get('info').get('current'),
-                     req.json().get('info').get('limit')
-                        ))
+                   "\n\t\t[+] Download: %s/%s\n\t\t[+] Info: %s/%s" %
+                   (req.json().get('analysis').get('current'),
+                    req.json().get('analysis').get('limit'),
+                    req.json().get('download').get('current'),
+                    req.json().get('download').get('limit'),
+                    req.json().get('info').get('current'),
+                    req.json().get('info').get('limit')))
 
-        else:
-            return("\n[!] Error, A/V Caesar API request for API limits went \
-                    horribly wrong. %s" % str(req.text))
+        return "\n[!] Error, A/V Caesar API request for API limits went "\
+                    "horribly wrong. %s" % str(req.text)
 
     def latest_submissions(self):
         '''
@@ -49,7 +44,7 @@ class CaesarAPI():
         Parameters: N/A
         Return: string.
         '''
-        return("\t[*] AV Caesar does not support latest submissions.")
+        return "\t[*] AV Caesar does not support latest submissions."
 
     def hash_search(self, hash_val):
         '''
@@ -58,43 +53,40 @@ class CaesarAPI():
         Parameters: [hash_val] string value to specify hash to search for.
         return: string
         '''
-        req = requests.get(self.base_url+"/sample/"+hash_val,
-                cookies=dict(apikey=self.api_key))
+        req = requests.get(self.base_url+"/sample/"+hash_val, cookies=dict(apikey=self.api_key))
 
         if req.status_code == 200:
             try:
-                return("\t[AV Caesar]\n"+json.dumps(req.json(),indent=4))
-            except json.decoder.JSONDecodeError as err:
-                # If something is searched out and doesn't return JSON or 
+                return "\t[AV Caesar]\n"+json.dumps(req.json(), indent=4)
+            except json.decoder.JSONDecodeError:
+                # If something is searched out and doesn't return JSON or
                 # malformed, print the plain text.
                 if len(req.text) == 0:
                     return "[!] Error, HTTP request succeeded, but no content"\
                             " is available."
-                else:
-                    return(req.text)
+                return req.text
         elif req.status_code == 429:
-            return "\t[!] Error, too many requests being made against AV Caesar." 
+            return "\t[!] Error, too many requests being made against AV Caesar."
         else:
             return "\t[AV Caesar] Hash not found."
-    
 
-    def download_sample(self, hash_value, file_name=None):
+    def download_sample(self, hash_value):
         '''
         Name: download_sample
-        Purpose: Download a hash from an API provider and writes sample 
+        Purpose: Download a hash from an API provider and writes sample
                  byte stream to a file of the hash name or user provided name.
         Param:
-            [hash_value] string value indicatin hash (sha{128,256,512}/md5) to 
+            [hash_value] string value indicatin hash (sha{128,256,512}/md5) to
             search for.
 
-            [file_name] string value specifying the file name to download on 
+            [file_name] string value specifying the file name to download on
             the CLI. Otherwise the file name is the hash.
         Return:
-            [boolean] True if file downloaded successfully. 
+            [boolean] True if file downloaded successfully.
                       False if error occurs.
         '''
         req = requests.get(self.base_url+"/sample/"+hash_value+"/download",
-                cookies=dict(apikey=self.api_key))
+                           cookies=dict(apikey=self.api_key))
 
         if req.status_code == 200:
             try:
@@ -102,8 +94,8 @@ class CaesarAPI():
                     fout.write(req.content)
                 return True
             except IOError as err:
-                print("\t[!] Error writing to file.")
+                print("\t[!] Error writing to file.\n\t%s" % str(err))
         else:
-            print("\t[!] Failed to identify hash %s.\n\t[ERROR] %s" 
-                    % (hash_value, req.status_code))
+            print("\t[!] Failed to identify hash %s.\n\t[ERROR] %s"
+                  % (hash_value, req.status_code))
             return False
