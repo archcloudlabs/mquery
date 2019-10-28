@@ -33,25 +33,26 @@ class HBAPI():
         try:
             req = requests.get(self.base_url+"key/current",
                                headers=self.http_headers)
-            if req.status_code == 200:
-                api_headers = json.loads(req.headers.get("Api-Limits"))
-                return("\n\t[Hybrid Analysis Requests]\n\t\t[+] Limits: "
-                       "M:%s:H%s\n\t\t[+] Used: M%s:H%s\n" %
-                       (api_headers.get("limits").get("minute"),
-                        api_headers.get("limits").get("hour"),
-                        api_headers.get("used").get("minute"),
-                        api_headers.get("used").get("hour")))
-
-            elif req.status_code == 429:
-                return "\n\t[!] Error, too many requests being made against " \
-                        "Hybrid Analysis."
-            return "\n\t[!] Error, Hyrbrid API request for API limits went " \
-                    "horribly wrong. %s\n" % str(req.text)
-
         except requests.exceptions.RequestException as err:
-            print("[!] Error posting data!\n\\t %s" % str(err))
             return "\n\t[!] Error, Hyrbrid API request for API limits went " \
-                    "horribly wrong. %s\n" % str(req.text)
+                    "horribly wrong.\n\t %s" % str(req.text)
+
+        if req.status_code == 200:
+            api_headers = json.loads(req.headers.get("Api-Limits"))
+            return("\n\t[Hybrid Analysis Requests]\n\t\t[+] Limits: "
+                   "M:%s:H%s\n\t\t[+] Used: M%s:H%s\n" %
+                   (api_headers.get("limits").get("minute"),
+                    api_headers.get("limits").get("hour"),
+                    api_headers.get("used").get("minute"),
+                    api_headers.get("used").get("hour")))
+
+        elif req.status_code == 429:
+            return "\n\t[!] Error, too many requests being made against " \
+                    "Hybrid Analysis."
+
+        return "\n\t[!] Error, Hyrbrid API request for API limits went " \
+                "horribly wrong. %s\n" % str(req.text)
+
 
     def latest_submissions(self):
         '''
@@ -63,7 +64,11 @@ class HBAPI():
         # user-agent specified in documentation
         self.http_headers = {"accept" : "application/json",
                              "User-Agent" : "Falcon Sandbox", "api-key" : self.api_key}
-        req = requests.get(self.base_url+"feed/latest", headers=self.http_headers)
+
+        try:
+            req = requests.get(self.base_url+"feed/latest", headers=self.http_headers)
+        except requests.exceptions.RequestException as err:
+            return "[!] Error getting latest submissions from Hybria Analysis!\n\t%s" % (err)
 
         if req.status_code == 200:
             return "\t[Hybrid Analysis]\n" + json.dumps(req.json(), indent=4)
@@ -80,9 +85,12 @@ class HBAPI():
         return: string
         '''
         body = "hash=%20"+hash_val
-        req = requests.post(self.base_url+"search/hash",
-                            headers=self.http_headers,
-                            data=body)
+        try:
+            req = requests.post(self.base_url+"search/hash",
+                                headers=self.http_headers,
+                                data=body)
+        except requests.exceptions.RequestException as err:
+            return "[!] Error searching for hash with Hybrid Analysis!\n\t%s" % (err)
 
         if req.status_code == 200 and len(req.json()) > 0:
             return "[Hybrid-Analysis]\n"+json.dumps(req.json(), indent=4)
@@ -104,8 +112,12 @@ class HBAPI():
                       False if error occurs.
         '''
 
-        req = requests.get(self.base_url + "overview/" + hash_value + \
-                "/sample", headers=self.http_headers)
+        try:
+            req = requests.get(self.base_url + "overview/" + hash_value + \
+                    "/sample", headers=self.http_headers)
+        except requests.exceptions.RequestException as err:
+            return "[!] Error downloading sample with Hybrid Analysis %s" % (err)
+
 
         if req.status_code == 200:
             if file_name is None:

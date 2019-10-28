@@ -22,7 +22,11 @@ class CaesarAPI():
         Purpose: get limit of API provider
         Parameters: N/A
         '''
-        req = requests.get(self.base_url+"/user/quota", cookies=dict(apikey=self.api_key))
+        try:
+            req = requests.get(self.base_url+"/user/quota", cookies=dict(apikey=self.api_key))
+        except requests.exceptions.RequestException as req_err:
+            return "[!] Error getting API info from AV Caesar!\n\t %s" % str(req_err)
+
 
         if req.status_code == 200:
             return("\n\t[ AV Caesar ]\n\t\t[+] Analysis %s/%s" \
@@ -53,7 +57,12 @@ class CaesarAPI():
         Parameters: [hash_val] string value to specify hash to search for.
         return: string
         '''
-        req = requests.get(self.base_url+"/sample/"+hash_val, cookies=dict(apikey=self.api_key))
+        try:
+            req = requests.get(self.base_url+"/sample/"+hash_val, cookies=dict(apikey=self.api_key))
+
+        except requests.exceptions.RequestException as req_err:
+            return "[!] Error searching for hash from AV Caesar!\n\t %s" % str(req_err)
+
 
         if req.status_code == 200:
             try:
@@ -85,8 +94,11 @@ class CaesarAPI():
             [boolean] True if file downloaded successfully.
                       False if error occurs.
         '''
-        req = requests.get(self.base_url+"/sample/"+hash_value+"/download",
-                           cookies=dict(apikey=self.api_key))
+        try:
+            req = requests.get(self.base_url+"/sample/"+hash_value+"/download",
+                               cookies=dict(apikey=self.api_key))
+        except requests.exceptions.RequestException as req_err:
+            return "[!] Error downloading sample from AV Caesar!\n\t %s" % str(req_err)
 
         if req.status_code == 200:
             try:

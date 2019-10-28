@@ -26,7 +26,10 @@ class MalshareAPI():
         Purpose: get limit of API provider
         Parameters: N/A
         '''
-        req = requests.get(self.base_url+"getlimit")
+        try:
+            req = requests.get(self.base_url+"getlimit")
+        except requests.exceptions.RequestException as err:
+            return "[!] Error, could not get API info from Malshare!\n\t%s" % (err)
         if req.status_code == 200:
             return("\n\t[ Malshare ]\n\t\t[+] Limit: %s \n\t\t[+] Remaining: %s "
                    %  (req.json().get("LIMIT"), req.json().get("REMAINING")))
@@ -40,7 +43,11 @@ class MalshareAPI():
         Parameters: N/A
         Return: string.
         '''
-        req = requests.get(self.base_url+"getlist") # Get the latest submissions
+        try:
+            req = requests.get(self.base_url+"getlist") # Get the latest submissions
+        except requests.exceptions.RequestException as err:
+            return "[!] Error, could not get latest submissions from Malshare!\n\t%s" % (err)
+
         if req.status_code == 200:
             for hashes in req.json():
                     # Get data about the latest submissions
@@ -63,7 +70,11 @@ class MalshareAPI():
         Parameters: [hash_val] string value to specify hash to search for.
         return: string
         '''
-        req = requests.get(self.hash_search_endpoint+hash_val)
+        try:
+            req = requests.get(self.hash_search_endpoint+hash_val)
+        except requests.exceptions.RequestException as err:
+            return "[!] Error, could not search for hash with Malshare!\n\t%s" % (err)
+
         if req.status_code == 200:
             try:
                 return "[Malshare]\n" + json.dumps(req.json(), indent=4)
@@ -95,7 +106,10 @@ class MalshareAPI():
             [boolean] True if file downloaded successfully.
                       False if error occurs.
         '''
-        req = requests.get(self.download_endpoint+hash_value)
+        try:
+            req = requests.get(self.download_endpoint+hash_value)
+        except requests.exceptions.RequestException as err:
+            return "[!] Error, could not downloda sample with Malshare!\n\t%s" % (err)
 
         if req.status_code == 200:
             try:

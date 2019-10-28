@@ -36,8 +36,12 @@ class VTAPI():
         '''
         print("\t[*] This is a premium feature, and requires a private API key.")
         self.params['package'] = "11:00"
-        req = requests.get(self.base_url+"feed", params=self.params, stream=True,
-                           allow_redirects=True)
+        try:
+            req = requests.get(self.base_url+"feed", params=self.params, stream=True,
+                               allow_redirects=True)
+
+        except requests.exceptions.RequestException as err:
+            return "[!] Error could not get latest submissions with Virus Total. %s" % (err)
 
         if req.status_code == 200:
             fname = time.asctime().replace(' ', '-').replace(':', '-')
@@ -56,6 +60,8 @@ class VTAPI():
             return "\n\t[!] Error, you do not have appropriate permissions " \
                     "to make this Virus Total API request."
 
+        return "[!] Error, Could not get latest submissions from Virus Total."
+
     def hash_search(self, hash_val):
         '''
         Name: search_hash_sample
@@ -64,7 +70,11 @@ class VTAPI():
         return: string
         '''
 
-        req = requests.get(self.base_url+ "report", params=self.params)
+        try:
+            req = requests.get(self.base_url+ "report", params=self.params)
+        except requests.exceptions.RequestException as err:
+            return "[!] Error could not search for hash with Virus Total. %s" % (err)
+
         self.params['resource'] = hash_val
         self.params['allinfo'] = False  # premium API feature
         req = requests.get(self.base_url+ "report", params=self.params)
@@ -84,7 +94,7 @@ class VTAPI():
             return "\n\t[!] Error, you do not have appropriate permissions " \
                     "to make this Virus Total API request."
         else:
-            return "\t[VirusTotal] Error, hash not found."
+            return "\t[VirusTotal] hash not found."
 
     def download_sample(self, hash_value):
         '''
@@ -103,7 +113,10 @@ class VTAPI():
         '''
         print("\t[*] This is a premium feature, and requires a private API key.")
         self.params['hash'] = hash_value
-        req = requests.get(self.base_url+ "download", params=self.params)
+        try:
+            req = requests.get(self.base_url+ "download", params=self.params)
+        except requests.exceptions.RequestException as err:
+            return "[!] Error could not download sample from Virus Total %s" % (err)
 
         if req.status_code == 200:
             try:
