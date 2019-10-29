@@ -108,11 +108,18 @@ pip install -r requirements.txt
 ```
 docker run mquery --action search --hash 5a34cb996293fde2cb7a4ac89587393a
 ```
+* Download a Sample
+```
+docker run mquery --action download  --hash 5737aeafb81b23498b7b85ebb84158eb
+```
 
-* Download a sample
+* Get Info about APIs
+```
+docker run mquery --action info 
+```
 
 ## Adding Additional Endpoints
-The ``` ./src/libs ```  folder contains classes for each API provider. 
+The ``` ./providers```  folder contains classes for each API provider. 
 ```libquery.py``` acts as an middleware wrapper to abstract the differences in 
 the underlying provider API calls. 
 
