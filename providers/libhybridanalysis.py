@@ -26,8 +26,8 @@ class HBAPI():
 
     def get_api_info(self):
         '''
-        Name: get_limit
-        Purpose: get limit of API provider
+        Name: get_api_limit
+        Purpose: get info about API usage from provider
         Parameters: N/A
         '''
         try:
@@ -79,8 +79,8 @@ class HBAPI():
 
     def hash_search(self, hash_val):
         '''
-        Name: search_hash_sample
-        purpose: search for infor about a particular hash
+        Name: hash_search
+        Purpose: search for information about a particular hash
         Parameters: [hash_val] string value to specify hash to search for.
         return: string
         '''
