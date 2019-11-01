@@ -35,7 +35,7 @@ class HBAPI():
                                headers=self.http_headers)
         except requests.exceptions.RequestException as err:
             return "\n\t[!] Error, Hyrbrid API request for API limits went " \
-                    "horribly wrong.\n\t %s" % str(req.text)
+                    "horribly wrong.\n\tError: %s" % str(err)
 
         if req.status_code == 200:
             api_headers = json.loads(req.headers.get("Api-Limits"))
