@@ -2,9 +2,9 @@
 '''
 MQuery CLI Utility
 '''
-from providers.libquery import MalQuery
 import sys
 import argparse
+from providers.libquery import MalQuery
 
 if __name__ == "__main__":
 
@@ -21,6 +21,9 @@ if __name__ == "__main__":
     parser.add_argument("--action", choices=['download', 'search', 'list', 'info', 'daily-download'],
                         help="specify request type.", required=True)
 
+    parser.add_argument("-d", "--dir", default="", help="specify download dirrectory.",
+                        required=False)
+
     args = parser.parse_args()
 
     if (args.action == "search" or args.action == "download") and args.hash is None:
@@ -31,4 +34,4 @@ if __name__ == "__main__":
         print("\t[!] Invalid provider for daily feed download!\n")
         sys.exit(1)
 
-    query = MalQuery(args.provider.lower(), args.action, args.hash)
+    query = MalQuery(args.provider.lower(), args.action, args.hash, args.dir)
