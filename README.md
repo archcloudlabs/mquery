@@ -15,8 +15,9 @@ you have a premium API- key (I.E: downloading samples from VT)**.
 
 ### Supported functionality
 * Searching hashes.
-* Download samples (*depends on your API access*).
+* Download specific samples (*depends on your API access*).
 * Daily feed lists.
+* Download daily feed list (*depends on provider API*).
 * List API info.
 
 ## Getting API Keys
