@@ -149,7 +149,7 @@ class HBAPI():
     def daily_download(self):
         '''
         Name: daily_download
-        Purpose: get latest hash contents.
+        Purpose: Download latest samples from feed.
         Parameters: N/A
         Return: string.
         '''
@@ -171,5 +171,6 @@ class HBAPI():
                         % time.asctime()
         if req.status_code == 429:
             return "\n\t[!] Error, too many requests being made against Hybrid Analysis."
+
         return "\n\t[!] Error, Hyrbrid API request for latest submissions went " \
                 "horribly wrong. %s" % str(req.text)
