@@ -1,3 +1,4 @@
+import time
 import json
 import sys
 try:
@@ -46,7 +47,7 @@ class HBAPI():
                     api_headers.get("used").get("minute"),
                     api_headers.get("used").get("hour")))
 
-        elif req.status_code == 429:
+        if req.status_code == 429:
             return "\n\t[!] Error, too many requests being made against " \
                     "Hybrid Analysis."
 
@@ -72,7 +73,7 @@ class HBAPI():
 
         if req.status_code == 200:
             return "\t[Hybrid Analysis]\n" + json.dumps(req.json(), indent=4)
-        elif req.status_code == 429:
+        if req.status_code == 429:
             return "\n\t[!] Error, too many requests being made against Hybrid Analysis."
         return "\n\t[!] Error, Hyrbrid API request for latest submissions went " \
                 "horribly wrong. %s" % str(req.text)
@@ -84,9 +85,11 @@ class HBAPI():
         Parameters: [hash_val] string value to specify hash to search for.
         return: string
         '''
-        body = "hash=%20"+hash_val
+        #body = "hash=" + hash_val + str(time.time()).replace(".","")
+        body = "hash=" + hash_val 
+
         try:
-            req = requests.post(self.base_url+"search/hash",
+            req = requests.post(self.base_url+"search/hash?_timestamp=" + str(time.time()).replace(".", ""),
                                 headers=self.http_headers,
                                 data=body)
         except requests.exceptions.RequestException as err:
@@ -112,12 +115,14 @@ class HBAPI():
                       False if error occurs.
         '''
 
+        if len(hash_value) != 64:
+            print("[HBA Download Error] Hybrid Analysis requires a sha256 hash"\
+                    "to download.")
         try:
             req = requests.get(self.base_url + "overview/" + hash_value + \
                     "/sample", headers=self.http_headers)
         except requests.exceptions.RequestException as err:
-            return "[!] Error downloading sample with Hybrid Analysis %s" % (err)
-
+            print("[!] Error downloading sample with Hybrid Analysis %s" % (err))
 
         if req.status_code == 200:
             if file_name is None:
@@ -137,6 +142,34 @@ class HBAPI():
                 return True
 
         else:
-            print("\t[!] Failed to identify hash %s.\n\t[ERROR] %s"
-                  % (hash_value, req.status_code))
+            print("\t[!] Failed to identify hash %s.\n\t\t[ERROR] %s"
+                  % (hash_value, req.json().get('message')))
             return False
+
+    def daily_download(self):
+        '''
+        Name: daily_download
+        Purpose: get latest hash contents.
+        Parameters: N/A
+        Return: string.
+        '''
+        # user-agent specified in documentation
+        self.http_headers = {"accept" : "application/json",
+                             "User-Agent" : "Falcon Sandbox", "api-key" : self.api_key}
+
+        try:
+            req = requests.get(self.base_url+"feed/latest", headers=self.http_headers)
+        except requests.exceptions.RequestException as err:
+            return "[!] Error getting latest submissions from Hybria Analysis!\n\t%s" % (err)
+
+        if req.status_code == 200:
+            for sample in req.json().get('data'):
+                if self.download_sample(sample.get('sha256')):
+                    print("\t[Hybrid Analysis] Downloaded %s @%s" % \
+                            (sample.get('sha256'), time.asctime()))
+            return "\t[Hybird Analysis] Successfully finished downloaded samples @%s" \
+                        % time.asctime()
+        if req.status_code == 429:
+            return "\n\t[!] Error, too many requests being made against Hybrid Analysis."
+        return "\n\t[!] Error, Hyrbrid API request for latest submissions went " \
+                "horribly wrong. %s" % str(req.text)
