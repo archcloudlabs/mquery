@@ -18,7 +18,7 @@ if __name__ == "__main__":
     parser.add_argument("--hash", help="Specify hash (MD5, SHA128, SHA256).",
                         required=False)
 
-    parser.add_argument("--action", choices=['download', 'search', 'list', 'info'],
+    parser.add_argument("--action", choices=['download', 'search', 'list', 'info', 'daily-download'],
                         help="specify request type.", required=True)
 
     args = parser.parse_args()
