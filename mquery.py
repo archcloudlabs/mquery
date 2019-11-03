@@ -27,4 +27,8 @@ if __name__ == "__main__":
         print("\t[!] Hash not specified!\n")
         sys.exit(1)
 
+    if args.action == "daily-download" and args.provider not in ["hba", "malshare", "all"]:
+        print("\t[!] Invalid provider for daily feed download!\n")
+        sys.exit(1)
+
     query = MalQuery(args.provider.lower(), args.action, args.hash)
