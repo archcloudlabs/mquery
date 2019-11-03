@@ -43,6 +43,7 @@ The following variable names are parsed by ```libquery.py``` for provider access
 * Malshare: ```MALSHARE_TOKEN```
 * Virus Total (vt): ```VT_TOKEN```
 * Hybrid-Analysis (hba): ```HBA_TOKEN```
+* Av Caesar (caesar): ```CAESAR_TOKEN```
 
 Here's an ```.zshrc``` example:
 ```
@@ -101,6 +102,22 @@ pip install -r requirements.txt
     [+] Used: M2:H2
 
 [*] Virustotal does not support an info endpoint at this time.
+```
+
+* Download daily digest of samples (only available via Malshare & Hybrid Analysis)
+```
+./mquery --action daily-download --provider hba
+```
+
+* Download daily digest from Malshare & Hybrid Analysis
+```
+./mquery --action daily-download 
+```
+
+* Download daily digest from a provider (Malshare or Hybrid Analysis)
+```
+./mquery --action daily-download --provider malshare;
+./mquery --action daily-download --provider hba;
 ```
 
 #### Example Docker Queries
