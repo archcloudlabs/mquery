@@ -180,6 +180,10 @@ class MalQuery():
         elif action == "daily-download":
             print("\n[===============[ Daily Download ]==============]")
             for provider in self.__provider_objects__:
-                print(provider.daily_download())
+                try:
+                    print(provider.daily_download())
+                except AttributeError as attr_err:
+                    print("\n\t[daily-download error] %s" % str(attr_err))
+                    pass
             print("\n[===============================================]")
             return 0
