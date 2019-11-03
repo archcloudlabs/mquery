@@ -176,4 +176,10 @@ class MalQuery():
             for provider in self.__provider_objects__:
                 print(provider.latest_submissions())
             print("\n[===============================================]")
+
+        elif action == "daily-download":
+            print("\n[===============[ Daily Download ]==============]")
+            for provider in self.__provider_objects__:
+                print(provider.daily_download())
+            print("\n[===============================================]")
             return 0
