@@ -14,11 +14,16 @@ class MalQuery():
     different underlying Malware download site APIs.
     '''
 
-    def __init__(self, provider, action, hashval):
+    def __init__(self, provider, action, hashval, directory):
 
         self.provider = provider # CLI Provided API provider
         self.action = action # CLI provided action
         self.hash = hashval # Hash to search
+        self.dir = directory # Directory to save samples to
+
+        if self.dir[-1::] != "/":
+            print("[*] Full filepath not specified. Downloaded files will " \
+                    "precede with %sFILE_HASH_HERE" % str(self.dir))
 
         # TEMPLATE API
         # self.custom_api_key = self.__get_env_var__("CUSTOM_TOKEN")
@@ -54,7 +59,6 @@ class MalQuery():
 
         self.parse_action(self.action) # Parse CLI action and call underlying
                                        # API objects.
-
     def __api_status__(self):
         '''
         Name: __api_status__
@@ -147,7 +151,7 @@ class MalQuery():
             return 1
         if action == "download":
             for provider in self.__provider_objects__:
-                if provider.download_sample(self.hash) == True:
+                if provider.download_sample(self.hash, self.dir) == True:
                     print("\n[================[ Download ]==================]")
                     print("\t[+] %s found and downloaded via %s" % (self.hash,
                             provider.__module__.split('.')[1].replace("lib", "")))
@@ -176,14 +180,15 @@ class MalQuery():
             for provider in self.__provider_objects__:
                 print(provider.latest_submissions())
             print("\n[===============================================]")
+            return 0
 
         elif action == "daily-download":
             print("\n[===============[ Daily Download ]==============]")
             for provider in self.__provider_objects__:
                 try:
                     print(provider.daily_download())
+                    print("\n[===============================================]")
                 except AttributeError as attr_err:
                     print("\n\t[daily-download error] %s" % str(attr_err))
                     pass
-            print("\n[===============================================]")
             return 0
