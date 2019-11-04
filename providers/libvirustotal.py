@@ -96,7 +96,7 @@ class VTAPI():
         else:
             return "\t[VirusTotal] hash not found."
 
-    def download_sample(self, hash_value):
+    def download_sample(self, hash_value, directory):
         '''
         Name: download_sample
         Purpose: Download a hash from an API provider and writes sample
@@ -120,7 +120,7 @@ class VTAPI():
 
         if req.status_code == 200:
             try:
-                with open(hash_value, "wb+") as fout:
+                with open(directory + hash_value, "wb+") as fout:
                     fout.write(req.content)
                 return True
             except IOError as err:
