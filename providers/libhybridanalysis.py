@@ -1,6 +1,7 @@
 import time
 import json
 import sys
+import zlib
 try:
     import requests
 except ImportError as err:
@@ -127,7 +128,8 @@ class HBAPI():
         if req.status_code == 200:
             try:
                 with open(directory + hash_value, "wb+") as fout:
-                    fout.write(req.content)
+                    decompress_data = zlib.decompress(req.content, 16+zlib.MAX_WBITS)
+                    fout.write(decompress_data)
                     print("\t[+] Successfully downloaded sample %s." % (hash_value))
                 return True
             except IOError as err:
