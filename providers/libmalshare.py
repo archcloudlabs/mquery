@@ -1,5 +1,6 @@
 import json
 import sys
+import time
 try:
     import requests
 except ImportError as err:
@@ -58,7 +59,7 @@ class MalshareAPI():
                     # TODO: for each hash that comes back concat into a large
                     # list and return all at once.
             return True # Avoid 'None' from being printed.
-        elif req.status_code == 429:
+        if req.status_code == 429:
             return "\t[!] Error, too many requests being made against Malshare API"
         return "\n\t[Malshare] Error, trying to get latest submissions." \
                 "Something went horribly wrong. %s" % str(req.text)
@@ -84,14 +85,13 @@ class MalshareAPI():
                 if len(req.text) == 0:
                     return "\t[!] Error, HTTP request succeeded, but no content" \
                             "is available."
-                else:
-                    return req.text
+                return req.text
         elif req.status_code == 429:
             return "[!] Error, too many requests being made against Malshare."
         else:
             return "\t[Malshare] Hash not identified."
 
-    def download_sample(self, hash_value):
+    def download_sample(self, hash_value, directory):
         '''
         Name: download_sample
         Purpose: Download a hash from an API provider and writes sample
@@ -113,7 +113,7 @@ class MalshareAPI():
 
         if req.status_code == 200:
             try:
-                with open(hash_value, "wb+") as fout:
+                with open(directory + hash_value, "wb+") as fout:
                     fout.write(req.content)
                 return True
             except IOError as err:
@@ -122,3 +122,26 @@ class MalshareAPI():
             print("\t[!] Error %s, failed to identify hash %s." %
                   (req.status_code, hash_value))
             return False
+
+    def daily_download(self):
+        '''
+        Name: daily_download
+        Purpose: Download daily provided hashes from provider
+        Param: N/A
+        Return: string indicating success/errors when performing a bulk daily 
+                download
+        '''
+        try:
+            req = requests.get(self.base_url+"getlist") # Get the latest submissions
+        except requests.exceptions.RequestException as err:
+            return "[!] Error, could not get latest submissions from Malshare!\n\t%s" % (err)
+
+        if req.status_code == 200:
+            for sample in req.json():
+                if self.download_sample(sample.get('md5')):
+                    print("[Malshare] Downloaded %s @%s" % (sample.get('md5'), time.asctime()))
+            return "[Malshare] Successfully finished downloaded samples @%s" % time.asctime()
+        if req.status_code == 429:
+            return "\t[!] Error, too many requests being made against Malshare API"
+        return "\n\t[Malshare] Error, trying to get latest submissions." \
+                    "Something went horribly wrong. %s" % str(req.text)
