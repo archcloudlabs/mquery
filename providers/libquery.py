@@ -21,7 +21,7 @@ class MalQuery():
         self.hash = hashval # Hash to search
         self.dir = directory # Directory to save samples to
 
-        if self.dir[-1::] != "/":
+        if self.dir[-1::] not in ["/", ""] and self.action == "download":
             print("[*] Full filepath not specified. Downloaded files will " \
                     "precede with %sFILE_HASH_HERE" % str(self.dir))
 
