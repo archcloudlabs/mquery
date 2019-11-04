@@ -99,7 +99,7 @@ class HBAPI():
             return "[Hybrid-Analysis]\n"+json.dumps(req.json(), indent=4)
         return "\t[Hybrid-Analysis] Hash not found!"
 
-    def download_sample(self, hash_value, file_name=None):
+    def download_sample(self, hash_value, directory):
         '''
         Name: download_sample
         Purpose: Download a hash from an API provider and writes sample
@@ -108,8 +108,8 @@ class HBAPI():
             [hash_value] string value indicatin hash (sha{128,256,512}/md5) to
             search for.
 
-            [file_name] string value specifying the file name to download on
-            the CLI. Otherwise the file name is the hash.
+            [directory] string value specifying the directory to download a
+                        file to.
         Return:
             [boolean] True if file downloaded successfully.
                       False if error occurs.
@@ -125,22 +125,15 @@ class HBAPI():
             print("[!] Error downloading sample with Hybrid Analysis %s" % (err))
 
         if req.status_code == 200:
-            if file_name is None:
-                try:
-                    with open(hash_value, "wb+") as fout:
-                        fout.write(req.content)
-                    print("\t[+] Successfully downloaded sample %s." % (hash_value))
-                    return True
-                except IOError as err:
-                    print("\t[!] I/O Error downloading sample %s.\n\t%s" \
-                            % (hash_value, err))
-                    return False
-            else: # Specified filename on CLI
-                with open(file_name, "wb+") as fout:
+            try:
+                with open(directory + hash_value, "wb+") as fout:
                     fout.write(req.content)
-                print("\t[+] Successfully downloaded sample %s." % (file_name))
+                    print("\t[+] Successfully downloaded sample %s." % (hash_value))
                 return True
-
+            except IOError as err:
+                print("\t[!] I/O Error downloading sample %s.\n\t%s" \
+                        % (hash_value, err))
+                return False
         else:
             print("\t[!] Failed to identify hash %s.\n\t\t[ERROR] %s"
                   % (hash_value, req.json().get('message')))
