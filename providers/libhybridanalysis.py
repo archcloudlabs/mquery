@@ -139,7 +139,7 @@ class HBAPI():
                   % (hash_value, req.json().get('message')))
             return False
 
-    def daily_download(self):
+    def daily_download(self, directory):
         '''
         Name: daily_download
         Purpose: Download latest samples from feed.
@@ -157,7 +157,7 @@ class HBAPI():
 
         if req.status_code == 200:
             for sample in req.json().get('data'):
-                if self.download_sample(sample.get('sha256')):
+                if self.download_sample(sample.get('sha256'), directory):
                     print("\t[Hybrid Analysis] Downloaded %s @%s" % \
                             (sample.get('sha256'), time.asctime()))
             return "\t[Hybird Analysis] Successfully finished downloaded samples @%s" \
