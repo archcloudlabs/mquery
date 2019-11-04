@@ -164,7 +164,7 @@ class MalQuery():
         elif action == "search":
             print("\n[================[ Search ]===================]")
             for provider in self.__provider_objects__:
-                print(provider.hash_search(self.hash))
+                print(provider.hash_search(self.hash, self.dir))
             print("\n[===============================================]")
             return 0
 
@@ -186,7 +186,7 @@ class MalQuery():
             print("\n[===============[ Daily Download ]==============]")
             for provider in self.__provider_objects__:
                 try:
-                    print(provider.daily_download())
+                    print(provider.daily_download(self.dir))
                     print("\n[===============================================]")
                 except AttributeError as attr_err:
                     print("\n\t[daily-download error] %s" % str(attr_err))
