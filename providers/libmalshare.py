@@ -10,9 +10,7 @@ except ImportError as err:
 class MalshareAPI():
     '''
     API wrapper for https://www.malshare.com API.
-    Docs:
-    '''
-
+    Docs: ''' 
     def __init__(self, api_key):
         self.api_key = api_key
         self.base_url = ("https://malshare.com/api.php?api_key=%s&action=" % \
@@ -123,7 +121,7 @@ class MalshareAPI():
                   (req.status_code, hash_value))
             return False
 
-    def daily_download(self):
+    def daily_download(self, directory):
         '''
         Name: daily_download
         Purpose: Download daily provided hashes from provider
@@ -138,7 +136,7 @@ class MalshareAPI():
 
         if req.status_code == 200:
             for sample in req.json():
-                if self.download_sample(sample.get('md5')):
+                if self.download_sample(sample.get('md5'), directory):
                     print("[Malshare] Downloaded %s @%s" % (sample.get('md5'), time.asctime()))
             return "[Malshare] Successfully finished downloaded samples @%s" % time.asctime()
         if req.status_code == 429:
