@@ -14,7 +14,7 @@ class MalQuery():
     different underlying Malware download site APIs.
     '''
 
-    def __init__(self, provider, action, hashval, directory):
+    def __init__(self, provider, action, hashval, directory="."):
 
         self.provider = provider # CLI Provided API provider
         self.action = action # CLI provided action
@@ -164,7 +164,7 @@ class MalQuery():
         elif action == "search":
             print("\n[================[ Search ]===================]")
             for provider in self.__provider_objects__:
-                print(provider.hash_search(self.hash, self.dir))
+                print(provider.hash_search(self.hash))
             print("\n[===============================================]")
             return 0
 
