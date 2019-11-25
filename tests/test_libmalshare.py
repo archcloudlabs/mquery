@@ -44,9 +44,8 @@ class TestLibMalshare(unittest.TestCase):
         mock_get_api_info.return_value.content = "0x90\\0x92".encode()
 
         mapi = MalshareAPI("MOCK_API_KEY")
-        response = mapi.download_sample("HASH_EXAMPLE")
+        response = mapi.download_sample("HASH_EXAMPLE", "/tmp/")
         assert(response == True)
-
 
 if __name__ == "__main__":
     unittest.main()
