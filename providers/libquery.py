@@ -1,5 +1,6 @@
 try:
     import os
+    import logging
     from providers.libmalshare import MalshareAPI
     from providers.libhybridanalysis import HBAPI
     from providers.libvirustotal import VTAPI
@@ -15,6 +16,10 @@ class MalQuery():
     '''
 
     def __init__(self, provider, action, hashval, directory="."):
+
+        self.logging = logging.basicConfig(filename="mquery.log",
+                                           filemode="w+",
+                                           level=logging.INFO)
 
         self.provider = provider # CLI Provided API provider
         self.action = action # CLI provided action

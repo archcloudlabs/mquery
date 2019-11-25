@@ -1,5 +1,9 @@
+"""
+AVCaesar API class wrapper
+"""
 import json
 import sys
+import logging
 try:
     import requests
 except ImportError as err:
@@ -15,6 +19,7 @@ class CaesarAPI():
     def __init__(self, api_key):
         self.api_key = api_key
         self.base_url = "https://avcaesar.malware.lu/api/v1/"
+        logging.getLogger().setLevel(logging.INFO)
 
     def get_api_info(self):
         '''
@@ -65,7 +70,9 @@ class CaesarAPI():
 
 
         if req.status_code == 200:
+            logging.debug("Downloading hash %s", str(hash_val))
             try:
+                logging.info("Identified hash %s", str(hash_val))
                 return "\t[AV Caesar]\n"+json.dumps(req.json(), indent=4)
             except json.decoder.JSONDecodeError:
                 # If something is searched out and doesn't return JSON or

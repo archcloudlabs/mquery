@@ -1,6 +1,10 @@
+"""
+VirusTotal API class wrapper
+"""
 import json
 import time
 import sys
+import logging
 try:
     import requests
 except ImportError as err:
@@ -18,6 +22,7 @@ class VTAPI():
         self.api_key = api_key
         self.base_url = ("https://www.virustotal.com/vtapi/v2/file/")
         self.params = {'apikey' : self.api_key}
+        logging.getLogger().setLevel(logging.INFO)
 
     def get_api_info(self):
         '''
@@ -80,6 +85,7 @@ class VTAPI():
         req = requests.get(self.base_url+ "report", params=self.params)
         if req.status_code == 200:
             try:
+                logging.info("Identified hash %s", str(hash_val))
                 return "[VirusTotal]\n" + json.dumps(req.json(), indent=4)
             except json.decoder.JSONDecodeError:
                 if len(req.text) == 0:

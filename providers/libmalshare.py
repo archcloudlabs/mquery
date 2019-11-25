@@ -1,6 +1,10 @@
+'''
+Malshare API class wrapper
+'''
 import json
 import sys
 import time
+import logging
 try:
     import requests
 except ImportError as err:
@@ -10,14 +14,16 @@ except ImportError as err:
 class MalshareAPI():
     '''
     API wrapper for https://www.malshare.com API.
-    Docs: ''' 
+    Docs: '''
     def __init__(self, api_key):
         self.api_key = api_key
         self.base_url = ("https://malshare.com/api.php?api_key=%s&action=" % \
                 (self.api_key))
         self.hash_search_endpoint = (self.base_url + "details&hash=")
-        #self.data_search_endpoint = (self.base_url + "search&query=")
         self.download_endpoint = (self.base_url + "getfile&hash=")
+
+        logging.getLogger().setLevel(logging.INFO)
+
 
     def get_api_info(self):
         '''
@@ -64,7 +70,7 @@ class MalshareAPI():
 
     def hash_search(self, hash_val):
         '''
-        Name: hash_search 
+        Name: hash_search
         Purpose: search for information about a particular hash
         Parameters: [hash_val] string value to specify hash to search for.
         return: string
@@ -76,6 +82,7 @@ class MalshareAPI():
 
         if req.status_code == 200:
             try:
+                logging.info("Identified hash %s" % hash_val)
                 return "[Malshare]\n" + json.dumps(req.json(), indent=4)
             except json.decoder.JSONDecodeError:
                 # If something is searched out and doesn't return JSON or
@@ -110,9 +117,12 @@ class MalshareAPI():
             return "[!] Error, could not downloda sample with Malshare!\n\t%s" % (err)
 
         if req.status_code == 200:
+            logging.debug("Downloading hash %s", str(hash_value))
             try:
                 with open(directory + hash_value, "wb+") as fout:
                     fout.write(req.content)
+
+                logging.info("Downloading hash %s", str(hash_value))
                 return True
             except IOError as err:
                 print("\t[!] Error writing to file.\n\t%s" % (err))
@@ -126,7 +136,7 @@ class MalshareAPI():
         Name: daily_download
         Purpose: Download daily provided hashes from provider
         Param: N/A
-        Return: string indicating success/errors when performing a bulk daily 
+        Return: string indicating success/errors when performing a bulk daily
                 download
         '''
         try:

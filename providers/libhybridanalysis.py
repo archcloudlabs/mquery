@@ -1,7 +1,11 @@
+"""
+Hybrid-Analysis API class wrapper
+"""
 import time
 import json
 import sys
 import zlib
+import logging
 try:
     import requests
 except ImportError as err:
@@ -25,6 +29,7 @@ class HBAPI():
                              "api-key" : self.api_key}
 
         self.base_url = "https://www.hybrid-analysis.com/api/v2/"
+        logging.getLogger().setLevel(logging.INFO)
 
     def get_api_info(self):
         '''
@@ -97,6 +102,8 @@ class HBAPI():
             return "[!] Error searching for hash with Hybrid Analysis!\n\t%s" % (err)
 
         if req.status_code == 200 and len(req.json()) > 0:
+            logging.debug("Downloading hash %s", str(hash_val))
+            logging.info("Identified hash %s", str(hash_val))
             return "[Hybrid-Analysis]\n"+json.dumps(req.json(), indent=4)
         return "\t[Hybrid-Analysis] Hash not found!"
 
