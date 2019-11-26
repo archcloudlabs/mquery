@@ -136,6 +136,11 @@ docker run mquery --action download  --hash 5737aeafb81b23498b7b85ebb84158eb
 docker run mquery --action info 
 ```
 
+#### Running Unit Tests
+```
+python -m unittest
+```
+
 ## Adding Additional Endpoints
 The ``` ./providers```  folder contains classes for each API provider. 
 ```libquery.py``` acts as an middleware wrapper to abstract the differences in 
