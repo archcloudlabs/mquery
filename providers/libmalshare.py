@@ -54,6 +54,7 @@ class MalshareAPI():
             return "[!] Error, could not get latest submissions from Malshare!\n\t%s" % (err)
 
         if req.status_code == 200:
+            logging.info("[+] Malshare successfully requested latest submissions.")
             for hashes in req.json():
                     # Get data about the latest submissions
                 info_req = requests.get(self.base_url+"details&hash="+ \

@@ -53,6 +53,8 @@ class CaesarAPI():
         Parameters: N/A
         Return: string.
         '''
+
+        logging.info("[*] libavcaesar does not provide a latest-submissions feed.")
         return "\t[*] AV Caesar does not support latest submissions."
 
     def hash_search(self, hash_val):

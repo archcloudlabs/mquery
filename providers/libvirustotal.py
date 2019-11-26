@@ -39,6 +39,7 @@ class VTAPI():
         Parameters: N/A
         Return: string.
         '''
+
         print("\t[*] This is a premium feature, and requires a private API key.")
         self.params['package'] = "11:00"
         try:
@@ -49,6 +50,7 @@ class VTAPI():
             return "[!] Error could not get latest submissions with Virus Total. %s" % (err)
 
         if req.status_code == 200:
+            logging.info("[+] VirusTotal successfully requested latest submissions.")
             fname = time.asctime().replace(' ', '-').replace(':', '-')
             try:
                 with open(fname, 'wb') as file_writer:

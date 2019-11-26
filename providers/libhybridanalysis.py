@@ -70,14 +70,16 @@ class HBAPI():
         '''
         # user-agent specified in documentation
         self.http_headers = {"accept" : "application/json",
-                             "User-Agent" : "Falcon Sandbox", "api-key" : self.api_key}
-
+                             "User-Agent" : "Falcon Sandbox",
+                             "api-key" : self.api_key}
         try:
-            req = requests.get(self.base_url+"feed/latest", headers=self.http_headers)
+            req = requests.get(self.base_url+"feed/latest",
+                               headers=self.http_headers)
         except requests.exceptions.RequestException as err:
             return "[!] Error getting latest submissions from Hybria Analysis!\n\t%s" % (err)
 
         if req.status_code == 200:
+            logging.info("[+] Hybrid Analysis successfully requested latest submissions.")
             return "\t[Hybrid Analysis]\n" + json.dumps(req.json(), indent=4)
         if req.status_code == 429:
             return "\n\t[!] Error, too many requests being made against Hybrid Analysis."
@@ -91,7 +93,6 @@ class HBAPI():
         Parameters: [hash_val] string value to specify hash to search for.
         return: string
         '''
-        #body = "hash=" + hash_val + str(time.time()).replace(".","")
         body = "hash=" + hash_val 
 
         try:
