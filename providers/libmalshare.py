@@ -119,6 +119,7 @@ class MalshareAPI():
 
         if req.status_code == 200:
             logging.debug("Downloading hash %s", str(hash_value))
+            logging.info("[*] Malshare successfully downloaded sample %s.", str(hash_value))
             try:
                 with open(directory + hash_value, "wb+") as fout:
                     fout.write(req.content)

@@ -134,6 +134,7 @@ class HBAPI():
             print("[!] Error downloading sample with Hybrid Analysis %s" % (err))
 
         if req.status_code == 200:
+            logging.info("[*] Hybrid-Analysis successfully downloaded sample %s.", str(hash_value))
             try:
                 with open(directory + hash_value, "wb+") as fout:
                     decompress_data = zlib.decompress(req.content, 16+zlib.MAX_WBITS)

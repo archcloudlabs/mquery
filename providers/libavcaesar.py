@@ -54,7 +54,7 @@ class CaesarAPI():
         Return: string.
         '''
 
-        logging.info("[*] libavcaesar does not provide a latest-submissions feed.")
+        logging.info("[*] AVCaesar does not provide a latest-submissions feed.")
         return "\t[*] AV Caesar does not support latest submissions."
 
     def hash_search(self, hash_val):
@@ -110,6 +110,7 @@ class CaesarAPI():
             return "[!] Error downloading sample from AV Caesar!\n\t %s" % str(req_err)
 
         if req.status_code == 200:
+            logging.info("[*] AVCaesar successfully downloaded sample %s.", str(hash_value))
             try:
                 with open(directory + hash_value, "wb+") as fout:
                     fout.write(req.content)

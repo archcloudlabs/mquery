@@ -127,6 +127,7 @@ class VTAPI():
             return "[!] Error could not download sample from Virus Total %s" % (err)
 
         if req.status_code == 200:
+            logging.info("[+] VirusTotal successfully downloaded sample %s.", str(hash_value))
             try:
                 with open(directory + hash_value, "wb+") as fout:
                     fout.write(req.content)
