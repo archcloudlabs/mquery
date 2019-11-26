@@ -45,6 +45,7 @@ class HBAPI():
                     "horribly wrong.\n\tError: %s" % str(err)
 
         if req.status_code == 200:
+            logging.info("[*] Hybrid-Analyysis successfully requested API info endponit.")
             api_headers = json.loads(req.headers.get("Api-Limits"))
             return("\n\t[Hybrid Analysis Requests]\n\t\t[+] Limits: "
                    "M:%s:H%s\n\t\t[+] Used: M%s:H%s\n" %

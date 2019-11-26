@@ -30,6 +30,8 @@ class VTAPI():
         Purpose: get info about API usage from provider
         Parameters: N/A
         '''
+
+        logging.info("[*] VirusTotal does not support a get API info endpoint..")
         return "\t[*] Virustotal does not support an info endpoint at this time."
 
     def latest_submissions(self):

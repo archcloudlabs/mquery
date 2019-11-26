@@ -34,6 +34,7 @@ class CaesarAPI():
 
 
         if req.status_code == 200:
+            logging.info("[*] AVCaesar successfully requested API info endponit.")
             return("\n\t[ AV Caesar ]\n\t\t[+] Analysis %s/%s" \
                    "\n\t\t[+] Download: %s/%s\n\t\t[+] Info: %s/%s" %
                    (req.json().get('analysis').get('current'),

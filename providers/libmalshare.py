@@ -36,6 +36,7 @@ class MalshareAPI():
         except requests.exceptions.RequestException as err:
             return "[!] Error, could not get API info from Malshare!\n\t%s" % (err)
         if req.status_code == 200:
+            logging.info("[*] Malshare successfully requested API info endponit.")
             return("\n\t[ Malshare ]\n\t\t[+] Limit: %s \n\t\t[+] Remaining: %s "
                    %  (req.json().get("LIMIT"), req.json().get("REMAINING")))
         return "\n\t[!] Error, Malshare API request for API limits went " \
