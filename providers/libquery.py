@@ -17,8 +17,9 @@ class MalQuery():
 
     def __init__(self, provider, action, hashval, directory="."):
 
-        self.logging = logging.basicConfig(filename="mquery.log",
-                                           filemode="w+",
+        self.logging = logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
+                                           filename="mquery.log",
+                                           filemode="a+",
                                            level=logging.INFO)
 
         self.provider = provider # CLI Provided API provider
