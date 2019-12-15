@@ -35,6 +35,9 @@ you have a premium API- key (I.E: downloading samples from VT)**.
 * [AV Caesar](https://avcaesar.malware.lu/account/signup)
     * Free API calls for searching and downloading.
 
+* [Greynoise](https://greynoise.io/start)
+    * Free trial API calls for searching.
+
 ## Installation
 
 ### System Configuration
