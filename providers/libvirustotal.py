@@ -13,10 +13,10 @@ except ImportError as err:
 
 
 class VTAPI():
-    '''
+    """
     API wrapper for https://www.virustotal.com API.
     Docs: https://developers.virustotal.com
-    '''
+    """
 
     def __init__(self, api_key):
         self.api_key = api_key
@@ -25,22 +25,22 @@ class VTAPI():
         logging.getLogger().setLevel(logging.INFO)
 
     def get_api_info(self):
-        '''
+        """
         Name: get_api_info
         Purpose: get info about API usage from provider
         Parameters: N/A
-        '''
+        """
 
         logging.info("[*] VirusTotal does not support a get API info endpoint..")
         return "\t[*] Virustotal does not support an info endpoint at this time."
 
     def latest_submissions(self):
-        '''
+        """
         Name: latest_submissions
         Purpose: get latest hash contents.
         Parameters: N/A
         Return: string.
-        '''
+        """
 
         print("\t[*] This is a premium feature, and requires a private API key.")
         self.params['package'] = "11:00"
@@ -72,12 +72,12 @@ class VTAPI():
         return "[!] Error, Could not get latest submissions from Virus Total."
 
     def hash_search(self, hash_val):
-        '''
+        """
         Name: hash_search
         Purpose: search for information about a particular hash
         Parameters: [hash_val] string value to specify hash to search for.
         return: string
-        '''
+        """
 
         try:
             req = requests.get(self.base_url+ "report", params=self.params)
@@ -107,7 +107,7 @@ class VTAPI():
             return "\t[VirusTotal] hash not found."
 
     def download_sample(self, hash_value, directory):
-        '''
+        """
         Name: download_sample
         Purpose: Download a hash from an API provider and writes sample
                  byte stream to a file of the hash name or user provided name.
@@ -120,7 +120,7 @@ class VTAPI():
         Return:
             [boolean] True if file downloaded successfully.
                       False if error occurs.
-        '''
+        """
         print("\t[*] This is a premium feature, and requires a private API key.")
         self.params['hash'] = hash_value
         try:

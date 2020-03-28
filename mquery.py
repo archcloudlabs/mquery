@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-'''
+"""
 MQuery CLI Utility
-'''
+"""
 import sys
 import argparse
 from providers.libquery import MalQuery

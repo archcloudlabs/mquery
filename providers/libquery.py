@@ -10,10 +10,10 @@ except ImportError as err:
     os._exit(1)
 
 class MalQuery():
-    '''
+    """
     MalQuery is a middle-ware helper class to parse user-args and leverage
     different underlying Malware download site APIs.
-    '''
+    """
 
     def __init__(self, provider, action, hashval, directory="."):
 
@@ -66,10 +66,10 @@ class MalQuery():
         self.parse_action(self.action) # Parse CLI action and call underlying
                                        # API objects.
     def __api_status__(self):
-        '''
+        """
         Name: __api_status__
         Purpose: Check if API keys exist.
-        '''
+        """
         if self.provider == "all":
             self.__load_malshare_api__()
             self.__load_hba_api__()
@@ -89,11 +89,11 @@ class MalQuery():
             self.__load_caesar_api__()
 
     def __load_caesar_api__(self):
-        '''
+        """
         Name: __load_caesar_api
         Purpose: load AV Caesar API objects
         Return: N/A
-        '''
+        """
         if self.caesar_api_key is not None:
             self.has_caesar_api = True
             self.caesar_obj = CaesarAPI(self.caesar_api_key)
@@ -101,11 +101,11 @@ class MalQuery():
             print("\t[+] Caesar API token identified.")
 
     def __load_vt_api__(self):
-        '''
+        """
         Name: __load_vt_api
         Purpose: load Virus Total API objects
         Return: N/A
-        '''
+        """
         if self.vt_api_key is not None:
             self.has_vt_api = True
             self.vt_obj = VTAPI(self.vt_api_key)
@@ -113,11 +113,11 @@ class MalQuery():
             print("\t[+] VirusTotal API token identified.")
 
     def __load_malshare_api__(self):
-        '''
+        """
         Name: __load_malshare_api__
         Purpose: load Malshare API objects
         Return: N/A
-        '''
+        """
         if self.malshare_api_key is not None:
             self.has_malshare_api = True
             self.malshare_obj = MalshareAPI(self.malshare_api_key)
@@ -125,11 +125,11 @@ class MalQuery():
             print("\t[+] Malshare API token identified.")
 
     def __load_hba_api__(self):
-        '''
+        """
         Name: __load_hba_api__
         Purpose: load Hybrid-Analysis API objects
         Return: N/A
-        '''
+        """
         if self.hba_api_key is not None:
             self.has_hba_api = True
             self.hba_obj = HBAPI(self.hba_api_key)
@@ -137,21 +137,21 @@ class MalQuery():
             print("\t[+] Hybrid-Analysis API token identified.")
 
     def __get_env_var__(self, env_name):
-        '''
+        """
         Name: get_env_var
         purpose: get environment variable for malshare api key.
         return: string value.
-        '''
+        """
         if os.environ.get(env_name) is None or len(os.environ.get(env_name)) == 0:
             print("\t[!] %s environment variable was not specified." % str(env_name))
         else:
             return os.environ.get(env_name)
 
     def parse_action(self, action):
-        '''
+        """
         Name: parse_action
         Purpose: Parse CLI action for downloading/searchhing/list
-        '''
+        """
         if len(self.__provider_objects__) == 0:
             print("\t[!] No API providers found! Quitting!")
             return 1

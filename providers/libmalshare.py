@@ -1,6 +1,6 @@
-'''
+"""
 Malshare API class wrapper
-'''
+"""
 import json
 import sys
 import time
@@ -12,9 +12,9 @@ except ImportError as err:
     sys.exit()
 
 class MalshareAPI():
-    '''
+    """
     API wrapper for https://www.malshare.com API.
-    Docs: '''
+    Docs: """
     def __init__(self, api_key):
         self.api_key = api_key
         self.base_url = ("https://malshare.com/api.php?api_key=%s&action=" % \
@@ -26,11 +26,11 @@ class MalshareAPI():
 
 
     def get_api_info(self):
-        '''
+        """
         Name: get_api_info
         Purpose: get info about API usage from provider
         Parameters: N/A
-        '''
+        """
         try:
             req = requests.get(self.base_url+"getlimit")
         except requests.exceptions.RequestException as err:
@@ -43,12 +43,12 @@ class MalshareAPI():
                 "horribly wrong. %s" % str(req.text)
 
     def latest_submissions(self):
-        '''
+        """
         Name: latest_submissions
         Purpose: get latest hash contents.
         Parameters: N/A
         Return: string.
-        '''
+        """
         try:
             req = requests.get(self.base_url+"getlist") # Get the latest submissions
         except requests.exceptions.RequestException as err:
@@ -71,12 +71,12 @@ class MalshareAPI():
                 "Something went horribly wrong. %s" % str(req.text)
 
     def hash_search(self, hash_val):
-        '''
+        """
         Name: hash_search
         Purpose: search for information about a particular hash
         Parameters: [hash_val] string value to specify hash to search for.
         return: string
-        '''
+        """
         try:
             req = requests.get(self.hash_search_endpoint+hash_val)
         except requests.exceptions.RequestException as err:
@@ -99,7 +99,7 @@ class MalshareAPI():
             return "\t[Malshare] Hash not identified."
 
     def download_sample(self, hash_value, directory):
-        '''
+        """
         Name: download_sample
         Purpose: Download a hash from an API provider and writes sample
                  byte stream to a file of the hash name or user provided name.
@@ -112,7 +112,7 @@ class MalshareAPI():
         Return:
             [boolean] True if file downloaded successfully.
                       False if error occurs.
-        '''
+        """
         try:
             req = requests.get(self.download_endpoint+hash_value)
         except requests.exceptions.RequestException as err:
@@ -135,13 +135,13 @@ class MalshareAPI():
             return False
 
     def daily_download(self, directory):
-        '''
+        """
         Name: daily_download
         Purpose: Download daily provided hashes from provider
         Param: N/A
         Return: string indicating success/errors when performing a bulk daily
                 download
-        '''
+        """
         try:
             req = requests.get(self.base_url+"getlist") # Get the latest submissions
         except requests.exceptions.RequestException as err:
