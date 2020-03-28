@@ -1,7 +1,6 @@
 """
 AVCaesar API class wrapper
 """
-import json
 import sys
 import logging
 try:
@@ -11,10 +10,10 @@ except ImportError as err:
     sys.exit()
 
 class CaesarAPI():
-    '''
+    """
     API wrapper for AV Caesar
     Docs: https://avcaesar.malware.lu/docs/api
-    '''
+    """
 
     def __init__(self, api_key):
         self.api_key = api_key
@@ -22,11 +21,11 @@ class CaesarAPI():
         logging.getLogger().setLevel(logging.INFO)
 
     def get_api_info(self):
-        '''
+        """
         Name: get_api_info
         Purpose: get info about API usage from provider
         Parameters: N/A
-        '''
+        """
         try:
             req = requests.get(self.base_url+"/user/quota", cookies=dict(apikey=self.api_key))
         except requests.exceptions.RequestException as req_err:
@@ -48,23 +47,23 @@ class CaesarAPI():
                     "horribly wrong. %s" % str(req.text)
 
     def latest_submissions(self):
-        '''
+        """
         Name: latest_submissions
         Purpose: get latest hash contents.
         Parameters: N/A
         Return: string.
-        '''
+        """
 
         logging.info("[*] AVCaesar does not provide a latest-submissions feed.")
         return "\t[*] AV Caesar does not support latest submissions."
 
     def hash_search(self, hash_val):
-        '''
+        """
         Name: hash_search
         Purpose: search for information about a particular hash.
         Parameters: [hash_val] string value to specify hash to search for.
         return: string
-        '''
+        """
         try:
             req = requests.get(self.base_url+"/sample/"+hash_val, cookies=dict(apikey=self.api_key))
 
@@ -90,7 +89,7 @@ class CaesarAPI():
             return "\t[AV Caesar] Hash not found."
 
     def download_sample(self, hash_value, directory):
-        '''
+        """
         Name: download_sample
         Purpose: Download a hash from an API provider and writes sample
                  byte stream to a file of the hash name or user provided name.
@@ -103,7 +102,7 @@ class CaesarAPI():
         Return:
             [boolean] True if file downloaded successfully.
                       False if error occurs.
-        '''
+        """
         try:
             req = requests.get(self.base_url+"/sample/"+hash_value+"/download",
                                cookies=dict(apikey=self.api_key))
