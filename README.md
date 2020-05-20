@@ -70,12 +70,12 @@ pip install -r requirements.txt
 
 * Searching for hashes not specifying a provider:
 ```
-./mquery --action search --hash $HASH_VAL 
+./mquery --action search --ioc $HASH_VAL 
 ```
 
 * Downloading a file specifying the provider:
 ```
-./mquery --action download --hash $HASH_VAL --provider malshare
+./mquery --action download --ioc $HASH_VAL --provider malshare
 ```
 
 * Get API info from VirusTotal API:
@@ -124,11 +124,11 @@ pip install -r requirements.txt
 #### Example Docker Queries
 * Search for hash across all providers
 ```
-docker run mquery --action search --hash 5a34cb996293fde2cb7a4ac89587393a
+docker run mquery --action search --ioc 5a34cb996293fde2cb7a4ac89587393a
 ```
 * Download a Sample
 ```
-docker run mquery --action download  --hash 5737aeafb81b23498b7b85ebb84158eb
+docker run mquery --action download  --ioc 5737aeafb81b23498b7b85ebb84158eb
 ```
 
 * Get Info about APIs
