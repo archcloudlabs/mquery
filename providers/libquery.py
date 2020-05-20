@@ -15,7 +15,7 @@ class MalQuery():
     different underlying Malware download site APIs.
     '''
 
-    def __init__(self, provider, action, hashval, directory="."):
+    def __init__(self, provider, action, ioc_val, directory="."):
 
         self.logging = logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
                                            filename="mquery.log",
@@ -24,7 +24,7 @@ class MalQuery():
 
         self.provider = provider # CLI Provided API provider
         self.action = action # CLI provided action
-        self.hash = hashval # Hash to search
+        self.ioc = ioc_val # Hash to search
         self.dir = directory # Directory to save samples to
 
         if self.dir[-1::] not in ["/", ""] and self.action == "download":
@@ -157,20 +157,20 @@ class MalQuery():
             return 1
         if action == "download":
             for provider in self.__provider_objects__:
-                if provider.download_sample(self.hash, self.dir) == True:
+                if provider.download_sample(self.ioc, self.dir) == True:
                     print("\n[================[ Download ]==================]")
-                    print("\t[+] %s found and downloaded via %s" % (self.hash,
+                    print("\t[+] %s found and downloaded via %s" % (self.ioc,
                             provider.__module__.split('.')[1].replace("lib", "")))
 
                     return 0# No need to download same sample from different provider.
                 else:
-                    print("\t[!] Hash %s not found at %s" % (self.hash,
+                    print("\t[!] Hash %s not found at %s" % (self.ioc,
                             provider.__module__.split('.')[1].replace("lib", "")))
 
         elif action == "search":
             print("\n[================[ Search ]===================]")
             for provider in self.__provider_objects__:
-                print(provider.hash_search(self.hash))
+                print(provider.search(self.ioc))
             print("\n[===============================================]")
             return 0
 

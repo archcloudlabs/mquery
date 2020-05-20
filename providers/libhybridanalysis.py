@@ -65,7 +65,7 @@ class HBAPI():
     def latest_submissions(self):
         '''
         Name: latest_submissions
-        Purpose: get latest hash contents.
+        Purpose: get latest ioc contents.
         Parameters: N/A
         Return: string.
         '''
@@ -87,35 +87,35 @@ class HBAPI():
         return "\n\t[!] Error, Hyrbrid API request for latest submissions went " \
                 "horribly wrong. %s" % str(req.text)
 
-    def hash_search(self, hash_val):
+    def search(self, ioc_val):
         '''
-        Name: hash_search
-        Purpose: search for information about a particular hash
-        Parameters: [hash_val] string value to specify hash to search for.
+        Name: search
+        Purpose: search for information about a particular ioc
+        Parameters: [ioc_val] string value to specify hash to search for.
         return: string
         '''
-        body = "hash=" + hash_val 
+        body = "ioc=" + ioc_val 
 
         try:
-            req = requests.post(self.base_url+"search/hash?_timestamp=" + str(time.time()).replace(".", ""),
+            req = requests.post(self.base_url+"search/ioc?_timestamp=" + str(time.time()).replace(".", ""),
                                 headers=self.http_headers,
                                 data=body)
         except requests.exceptions.RequestException as err:
-            return "[!] Error searching for hash with Hybrid Analysis!\n\t%s" % (err)
+            return "[!] Error searching for ioc with Hybrid Analysis!\n\t%s" % (err)
 
         if req.status_code == 200 and len(req.json()) > 0:
-            logging.debug("Downloading hash %s", str(hash_val))
-            logging.info("Identified hash %s", str(hash_val))
+            logging.debug("Downloading ioc %s", str(ioc_val))
+            logging.info("Identified ioc %s", str(ioc_val))
             return "[Hybrid-Analysis]\n"+json.dumps(req.json(), indent=4)
         return "\t[Hybrid-Analysis] Hash not found!"
 
-    def download_sample(self, hash_value, directory):
+    def download_sample(self, ioc_value, directory):
         '''
         Name: download_sample
-        Purpose: Download a hash from an API provider and writes sample
-                 byte stream to a file of the hash name or user provided name.
+        Purpose: Download a ioc from an API provider and writes sample
+                 byte stream to a file of the ioc name or user provided name.
         Param:
-            [hash_value] string value indicatin hash (sha{128,256,512}/md5) to
+            [ioc_value] string value indicatin hash (sha{128,256,512}/md5) to
             search for.
 
             [directory] string value specifying the directory to download a
@@ -125,30 +125,30 @@ class HBAPI():
                       False if error occurs.
         '''
 
-        if len(hash_value) != 64:
-            print("[HBA Download Error] Hybrid Analysis requires a sha256 hash"\
+        if len(ioc_value) != 64:
+            print("[HBA Download Error] Hybrid Analysis requires a sha256 ioc"\
                     "to download.")
         try:
-            req = requests.get(self.base_url + "overview/" + hash_value + \
+            req = requests.get(self.base_url + "overview/" + ioc_value + \
                     "/sample", headers=self.http_headers)
         except requests.exceptions.RequestException as err:
             print("[!] Error downloading sample with Hybrid Analysis %s" % (err))
 
         if req.status_code == 200:
-            logging.info("[*] Hybrid-Analysis successfully downloaded sample %s.", str(hash_value))
+            logging.info("[*] Hybrid-Analysis successfully downloaded sample %s.", str(ioc_value))
             try:
-                with open(directory + hash_value, "wb+") as fout:
+                with open(directory + ioc_value, "wb+") as fout:
                     decompress_data = zlib.decompress(req.content, 16+zlib.MAX_WBITS)
                     fout.write(decompress_data)
-                    print("\t[+] Successfully downloaded sample %s." % (hash_value))
+                    print("\t[+] Successfully downloaded sample %s." % (ioc_value))
                 return True
             except IOError as err:
                 print("\t[!] I/O Error downloading sample %s.\n\t%s" \
-                        % (hash_value, err))
+                        % (ioc_value, err))
                 return False
         else:
-            print("\t[!] Failed to identify hash %s.\n\t\t[ERROR] %s"
-                  % (hash_value, req.json().get('message')))
+            print("\t[!] Failed to identify ioc %s.\n\t\t[ERROR] %s"
+                  % (ioc_value, req.json().get('message')))
             return False
 
     def daily_download(self, directory):

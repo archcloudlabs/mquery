@@ -15,7 +15,7 @@ if __name__ == "__main__":
                         "vt, caesar).", choices=['caesar', 'virustotal', 'malshare', 'hba'],
                         required=False, default="all")
 
-    parser.add_argument("--hash", help="Specify hash (MD5, SHA128, SHA256).",
+    parser.add_argument("-i", "--ioc", help="Specify artifact (IP/hash/domain/etc...)",
                         required=False)
 
     parser.add_argument("--action", choices=['download', 'search', 'list', 'info', 'daily-download'],
@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if (args.action == "search" or args.action == "download") and args.hash is None:
+    if (args.action == "search" or args.action == "download") and args.ioc is None:
         print("\t[!] Hash not specified!\n")
         sys.exit(1)
 
@@ -34,4 +34,4 @@ if __name__ == "__main__":
         print("\t[!] Invalid provider for daily feed download!\n")
         sys.exit(1)
 
-    query = MalQuery(args.provider.lower(), args.action, args.hash, args.dir)
+    query = MalQuery(args.provider.lower(), args.action, args.ioc, args.dir)

@@ -19,8 +19,8 @@ class MalshareAPI():
         self.api_key = api_key
         self.base_url = ("https://malshare.com/api.php?api_key=%s&action=" % \
                 (self.api_key))
-        self.hash_search_endpoint = (self.base_url + "details&hash=")
-        self.download_endpoint = (self.base_url + "getfile&hash=")
+        self.search_endpoint = (self.base_url + "details&ioc=")
+        self.download_endpoint = (self.base_url + "getfile&ioc=")
 
         logging.getLogger().setLevel(logging.INFO)
 
@@ -45,7 +45,7 @@ class MalshareAPI():
     def latest_submissions(self):
         '''
         Name: latest_submissions
-        Purpose: get latest hash contents.
+        Purpose: get latest ioc contents.
         Parameters: N/A
         Return: string.
         '''
@@ -56,13 +56,13 @@ class MalshareAPI():
 
         if req.status_code == 200:
             logging.info("[+] Malshare successfully requested latest submissions.")
-            for hashes in req.json():
+            for ioces in req.json():
                     # Get data about the latest submissions
-                info_req = requests.get(self.base_url+"details&hash="+ \
-                        hashes.get("md5"))
+                info_req = requests.get(self.base_url+"details&ioc="+ \
+                        ioces.get("md5"))
                 if info_req.status_code == 200:
                     print(json.dumps(info_req.json(), indent=4))
-                    # TODO: for each hash that comes back concat into a large
+                    # TODO: for each ioc that comes back concat into a large
                     # list and return all at once.
             return True # Avoid 'None' from being printed.
         if req.status_code == 429:
@@ -70,21 +70,21 @@ class MalshareAPI():
         return "\n\t[Malshare] Error, trying to get latest submissions." \
                 "Something went horribly wrong. %s" % str(req.text)
 
-    def hash_search(self, hash_val):
+    def search(self, ioc_val):
         '''
-        Name: hash_search
-        Purpose: search for information about a particular hash
-        Parameters: [hash_val] string value to specify hash to search for.
+        Name: search
+        Purpose: search for information about a particular ioc
+        Parameters: [ioc_val] string value to specify hash to search for.
         return: string
         '''
         try:
-            req = requests.get(self.hash_search_endpoint+hash_val)
+            req = requests.get(self.search_endpoint+ioc_val)
         except requests.exceptions.RequestException as err:
-            return "[!] Error, could not search for hash with Malshare!\n\t%s" % (err)
+            return "[!] Error, could not search for ioc with Malshare!\n\t%s" % (err)
 
         if req.status_code == 200:
             try:
-                logging.info("Identified hash %s" % hash_val)
+                logging.info("Identified ioc %s" % ioc_val)
                 return "[Malshare]\n" + json.dumps(req.json(), indent=4)
             except json.decoder.JSONDecodeError:
                 # If something is searched out and doesn't return JSON or
@@ -98,46 +98,46 @@ class MalshareAPI():
         else:
             return "\t[Malshare] Hash not identified."
 
-    def download_sample(self, hash_value, directory):
+    def download_sample(self, ioc_value, directory):
         '''
         Name: download_sample
-        Purpose: Download a hash from an API provider and writes sample
-                 byte stream to a file of the hash name or user provided name.
+        Purpose: Download a ioc from an API provider and writes sample
+                 byte stream to a file of the ioc name or user provided name.
         Param:
-            [hash_value] string value indicatin hash (sha{128,256,512}/md5) to
+            [ioc_value] string value indicatin hash (sha{128,256,512}/md5) to
             search for.
 
             [file_name] string value specifying the file name to download on
-            the CLI. Otherwise the file name is the hash.
+            the CLI. Otherwise the file name is the ioc.
         Return:
             [boolean] True if file downloaded successfully.
                       False if error occurs.
         '''
         try:
-            req = requests.get(self.download_endpoint+hash_value)
+            req = requests.get(self.download_endpoint+ioc_value)
         except requests.exceptions.RequestException as err:
             return "[!] Error, could not downloda sample with Malshare!\n\t%s" % (err)
 
         if req.status_code == 200:
-            logging.debug("Downloading hash %s", str(hash_value))
-            logging.info("[*] Malshare successfully downloaded sample %s.", str(hash_value))
+            logging.debug("Downloading ioc %s", str(ioc_value))
+            logging.info("[*] Malshare successfully downloaded sample %s.", str(ioc_value))
             try:
-                with open(directory + hash_value, "wb+") as fout:
+                with open(directory + ioc_value, "wb+") as fout:
                     fout.write(req.content)
 
-                logging.info("Downloading hash %s", str(hash_value))
+                logging.info("Downloading ioc %s", str(ioc_value))
                 return True
             except IOError as err:
                 print("\t[!] Error writing to file.\n\t%s" % (err))
         else:
-            print("\t[!] Error %s, failed to identify hash %s." %
-                  (req.status_code, hash_value))
+            print("\t\n[!] Error %s, failed to identify ioc %s." %
+                  (req.status_code, ioc_value))
             return False
 
     def daily_download(self, directory):
         '''
         Name: daily_download
-        Purpose: Download daily provided hashes from provider
+        Purpose: Download daily provided ioces from provider
         Param: N/A
         Return: string indicating success/errors when performing a bulk daily
                 download

@@ -37,7 +37,7 @@ class VTAPI():
     def latest_submissions(self):
         '''
         Name: latest_submissions
-        Purpose: get latest hash contents.
+        Purpose: get latest ioc contents.
         Parameters: N/A
         Return: string.
         '''
@@ -71,25 +71,25 @@ class VTAPI():
 
         return "[!] Error, Could not get latest submissions from Virus Total."
 
-    def hash_search(self, hash_val):
+    def search(self, ioc_val):
         '''
-        Name: hash_search
-        Purpose: search for information about a particular hash
-        Parameters: [hash_val] string value to specify hash to search for.
+        Name: search
+        Purpose: search for information about a particular ioc
+        Parameters: [ioc_val] string value to specify hash to search for.
         return: string
         '''
 
         try:
             req = requests.get(self.base_url+ "report", params=self.params)
         except requests.exceptions.RequestException as err:
-            return "[!] Error could not search for hash with Virus Total. %s" % (err)
+            return "[!] Error could not search for ioc with Virus Total. %s" % (err)
 
-        self.params['resource'] = hash_val
+        self.params['resource'] = ioc_val
         self.params['allinfo'] = False  # premium API feature
         req = requests.get(self.base_url+ "report", params=self.params)
         if req.status_code == 200:
             try:
-                logging.info("Identified hash %s", str(hash_val))
+                logging.info("Identified ioc %s", str(ioc_val))
                 return "[VirusTotal]\n" + json.dumps(req.json(), indent=4)
             except json.decoder.JSONDecodeError:
                 if len(req.text) == 0:
@@ -104,34 +104,34 @@ class VTAPI():
             return "\n\t[!] Error, you do not have appropriate permissions " \
                     "to make this Virus Total API request."
         else:
-            return "\t[VirusTotal] hash not found."
+            return "\t[VirusTotal] ioc not found."
 
-    def download_sample(self, hash_value, directory):
+    def download_sample(self, ioc_value, directory):
         '''
         Name: download_sample
-        Purpose: Download a hash from an API provider and writes sample
-                 byte stream to a file of the hash name or user provided name.
+        Purpose: Download a ioc from an API provider and writes sample
+                 byte stream to a file of the ioc name or user provided name.
         Param:
-            [hash_value] string value indicatin hash (sha{128,256,512}/md5) to
+            [ioc_value] string value indicatin hash (sha{128,256,512}/md5) to
             search for.
 
             [file_name] string value specifying the file name to download on
-            the CLI. Otherwise the file name is the hash.
+            the CLI. Otherwise the file name is the ioc.
         Return:
             [boolean] True if file downloaded successfully.
                       False if error occurs.
         '''
         print("\t[*] This is a premium feature, and requires a private API key.")
-        self.params['hash'] = hash_value
+        self.params['ioc'] = ioc_value
         try:
             req = requests.get(self.base_url+ "download", params=self.params)
         except requests.exceptions.RequestException as err:
             return "[!] Error could not download sample from Virus Total %s" % (err)
 
         if req.status_code == 200:
-            logging.info("[+] VirusTotal successfully downloaded sample %s.", str(hash_value))
+            logging.info("[+] VirusTotal successfully downloaded sample %s.", str(ioc_value))
             try:
-                with open(directory + hash_value, "wb+") as fout:
+                with open(directory + ioc_value, "wb+") as fout:
                     fout.write(req.content)
                 return True
             except IOError as err:
@@ -142,6 +142,6 @@ class VTAPI():
                     "to make this Virus Total API request.")
             return False
         else:
-            print("\t[!] Failed to identify hash %s.\n\t[ERROR] %s" \
-                    % (hash_value, req.status_code))
+            print("\t[!] Failed to identify ioc %s.\n\t[ERROR] %s" \
+                    % (ioc_value, req.status_code))
             return False

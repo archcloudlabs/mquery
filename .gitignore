@@ -1,4 +1,4 @@
 *.pyc
 *.vim
 __pycache__
-*.idea/*
+/venv/
