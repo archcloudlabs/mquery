@@ -50,11 +50,6 @@ class MalQuery():
         self.has_vt_api = None # Boolean object indicating API exists.
         self.vt_obj = None
 
-        # Caesar groupings
-        self.caesar_api_key = self.__get_env_var__("CAESAR_TOKEN")
-        self.has_caesar_api = None # Boolean object indicating API exists.
-        self.caesar_obj = None
-
         # Libquery Meta
         self.__provider_objects__ = [] # List of class objects to iterate
                                        # through for API operations.
@@ -73,7 +68,6 @@ class MalQuery():
             self.__load_malshare_api__()
             self.__load_hba_api__()
             self.__load_vt_api__()
-            self.__load_caesar_api__()
 
         elif self.provider == "hba":
             self.__load_hba_api__()
@@ -84,20 +78,6 @@ class MalQuery():
         elif self.provider == "virustotal":
             self.__load_vt_api__()
 
-        elif self.provider == "caesar":
-            self.__load_caesar_api__()
-
-    def __load_caesar_api__(self):
-        '''
-        Name: __load_caesar_api
-        Purpose: load AV Caesar API objects
-        Return: N/A
-        '''
-        if self.caesar_api_key is not None:
-            self.has_caesar_api = True
-            self.caesar_obj = CaesarAPI(self.caesar_api_key)
-            self.__provider_objects__.append(self.caesar_obj)
-            print("\t[+] Caesar API token identified.")
 
     def __load_vt_api__(self):
         '''
