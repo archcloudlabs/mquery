@@ -5,7 +5,6 @@ try:
     import unittest
     from providers.libmalshare import MalshareAPI
     from providers.libhybridanalysis import HBAPI
-    from providers.libavcaesar import CaesarAPI
     from providers.libvirustotal import VTAPI
 except ImportError as err:
     print("[!] Error, could not import %s" % str(err))
