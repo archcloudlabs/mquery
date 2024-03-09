@@ -19,8 +19,8 @@ class MalshareAPI():
         self.api_key = api_key
         self.base_url = ("https://malshare.com/api.php?api_key=%s&action=" % \
                 (self.api_key))
-        self.search_endpoint = (self.base_url + "details&ioc=")
-        self.download_endpoint = (self.base_url + "getfile&ioc=")
+        self.search_endpoint = (self.base_url + "details&hash=")
+        self.download_endpoint = (self.base_url + "getfile&hash=")
 
         logging.getLogger().setLevel(logging.INFO)
 
@@ -58,7 +58,7 @@ class MalshareAPI():
             logging.info("[+] Malshare successfully requested latest submissions.")
             for ioces in req.json():
                     # Get data about the latest submissions
-                info_req = requests.get(self.base_url+"details&ioc="+ \
+                info_req = requests.get(self.base_url+"details&hash="+ \
                         ioces.get("md5"))
                 if info_req.status_code == 200:
                     print(json.dumps(info_req.json(), indent=4))
@@ -146,7 +146,6 @@ class MalshareAPI():
             req = requests.get(self.base_url+"getlist") # Get the latest submissions
         except requests.exceptions.RequestException as err:
             return "[!] Error, could not get latest submissions from Malshare!\n\t%s" % (err)
-
         if req.status_code == 200:
             for sample in req.json():
                 if self.download_sample(sample.get('md5'), directory):
