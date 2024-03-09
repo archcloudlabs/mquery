@@ -5,10 +5,8 @@
 </p>
 
 ## About The Project
-This utility wraps [Malshare](https://www.malshare.com), [Hybrid
-Analysis'](https://www.hybrid-analysis.com), [Virus Total](https://www.virustotal.com),
-and [AV Caesar](https://avcaesar.malware.lu/) public APIs to enable researchers 
-to query for information about malware samples.  
+This utility wraps [Malshare](https://www.malshare.com), [Hybrid Analysis'](https://www.hybrid-analysis.com),
+and [Virus Total](https://www.virustotal.com), public APIs to enable researchers to query for information about malware samples.  
 
 **You must have an API key(s) to use this utility. Some features only work if
 you have a premium API- key (I.E: downloading samples from VT)**. 
@@ -32,9 +30,6 @@ you have a premium API- key (I.E: downloading samples from VT)**.
     * Free API calls for searching and listing files. Premium access required
       for downloads. Free accounts are heavily throttled (4 requests a second)
 
-* [AV Caesar](https://avcaesar.malware.lu/account/signup)
-    * Free API calls for searching and downloading.
-
 ## Installation
 
 ### System Configuration
@@ -44,13 +39,11 @@ The following variable names are parsed by ```libquery.py``` for provider access
 * Malshare: ```MALSHARE_TOKEN```
 * Virus Total (vt): ```VT_TOKEN```
 * Hybrid-Analysis (hba): ```HBA_TOKEN```
-* Av Caesar (caesar): ```CAESAR_TOKEN```
 
 Here's an ```.zshrc``` example:
 ```
 export MALSHARE_TOKEN="TOKEN_GOES_HERE"  
 export VT_TOKEN="TOKEN_GOES_HERE"
-export CAESAR_TOKEN="TOKEN_GOES_HERE"
 export HBA_TOKEN="TOKEN_GOES_HERE"
 ```
 
