@@ -5,7 +5,6 @@ try:
     import unittest
     from providers.libmalshare import MalshareAPI
     from providers.libhybridanalysis import HBAPI
-    from providers.libavcaesar import CaesarAPI
 except ImportError as err:
     print("[!] Error, could not import %s" % str(err))
     sys.exit(1)
@@ -21,14 +20,6 @@ class TestAPIGetInfo(unittest.TestCase):
         '''
         mapi = MalshareAPI(os.getenv("MALSHARE_TOKEN"))
         response = mapi.get_api_info()
-        assert "Error" not in response
-
-    def test_hashsearch_avcaesar(self):
-        '''
-        Evaluate av caesar hash searching with a known hash
-        '''
-        capi = CaesarAPI(os.getenv("CAESAR_TOKEN"))
-        response = capi.get_api_info()
         assert "Error" not in response
 
     def test_hashsearch_libhyrbirdanalysis(self):
