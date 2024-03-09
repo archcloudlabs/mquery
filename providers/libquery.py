@@ -4,7 +4,6 @@ try:
     from providers.libmalshare import MalshareAPI
     from providers.libhybridanalysis import HBAPI
     from providers.libvirustotal import VTAPI
-    from providers.libavcaesar import CaesarAPI
 except ImportError as err:
     print("[!] Error, could not import %s. Quitting!" % str(err))
     os._exit(1)
